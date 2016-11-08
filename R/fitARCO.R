@@ -1,18 +1,18 @@
-fitARCO=function(data,fn,p.fn,treated.unity=1,t0,lag=0,Xreg=NULL,display=TRUE,HACweights=1,alpha=0.05){
+fitARCO=function(data,fn,p.fn,treated.unity,t0,lag=0,Xreg=NULL,display=TRUE,HACweights=1,alpha=0.05){
   
   for(i in 1:length(data)){
     if(is.null(colnames(data[[i]]))){
       colnames(data[[i]])=paste("V",i,"-U",1:ncol(data[[i]]),sep="")
-      cat("Variable names not informed. Automatic names supplied.")
+      cat("Variable names not informed. Automatic names supplied. \n")
     }
   }
   
   for(i in 1:length(data)){
     aux=length(unique(colnames(data[[i]])))
-    K=ncol(data[[i]])
+    k=ncol(data[[i]])
     if(aux<k){
       colnames(data[[i]])=paste("V",i,"-U",1:ncol(data[[i]]),sep="")
-      cat("Some variables had no name. Automatic names supplied.")
+      cat("Some variables had no name. Automatic names supplied. \n")
     }
   }
   
