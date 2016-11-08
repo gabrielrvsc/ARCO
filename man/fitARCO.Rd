@@ -2,7 +2,7 @@
 \alias{fitARCO}
 \title{Estimates the ARCO using the model selected by the user.}
 \usage{
-fitARCO=function(data,fn,p.fn,treated.unity=1,t0,lag=0,Xreg=NULL,display=TRUE,HACweights=1,alpha=0.05)
+fitARCO(data,fn,p.fn,treated.unity=1,t0,lag=0,Xreg=NULL,display=TRUE,HACweights=1,alpha=0.05)
 }
 
 \description{
