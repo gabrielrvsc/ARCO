@@ -30,8 +30,8 @@ estimate_t0=function(data,fn,p.fn,start=0.3,end=0.95,treated.unity=1,lag=0,Xreg=
   }
   
   delta.norm=sqrt(rowSums((save.delta)^2))
-  lambda0=which(delta.norm==max(delta.norm))
+  t0=which(delta.norm==max(delta.norm))
   delta=delta.norm[lambda0]
   
-  return(c("lambda0"=lambda0,"delta.norm"=delta))
+  return(c("to"=t0,"delta.norm"=delta))
 }
