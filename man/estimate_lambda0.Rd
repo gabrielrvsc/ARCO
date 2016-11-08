@@ -1,0 +1,81 @@
+\name{estimate_t0}
+\alias{estimate_t0}
+\title{Estimates intervention time on a given treated unity.}
+\usage{
+estimate_t0(data, fn, p.fn, start=0.3, end=0.95, treated.unity=1, lag=0 Xreg=NULL)
+}
+
+\description{
+
+  This description can be useful to clarify the notation and understand how the arguments must be supplied to the functions. 
+  
+  - units: Each unity is indexed by a number between $1,...,n$. They are for exemple: countries, states, municipalities, firms, etc. 
+  - Variables: For each unity and for every time period $t=1,...,T$ we observe $q_i \geq 1$ variables. They are for example: GDP, inflation, sales, etc.
+  - Intervention: The intervention took place only in the treated unity at time $T_0=\lambda_0 T$, where $\lambda_0 \in (0,1)$.
+}
+  
+
+\arguments{
+  \item{data}{A list of matrixes or dataframes of length $q$. Each matrix is $T \times n$ and it contains observations of a single variable for all units and all periods of time. Even in the case of a single variable ($q=1$), the matrix must be inside a list.}
+
+  \item{fn}{The function used to estimate the first stage model. This function must receive only two arguments in the following order: X (independent variables), y (dependent variable). If the model requires additional arguments they must be supplied inside the function fn.}
+  \item{p.fn}{The function used to estimate the predict using the first stage model. This function also must receive only two arguments in the following order: model (model estimated in the first stage), newdata (out of sample data to estimate the second stage). If the prediction requires additional arguments they must be supplied inside the function p.fn.}
+  \item{start}{Initial value of $lambda_0$ to be tested.}
+  \item{end}{Final value of $lambda_0$ to be tested.}
+  \item{treated.unity}{Single number indicating the unity where the intervention took place.}  
+  \item{t0}{Single number indicating the intervention period.}
+  \item{lag}{Number of lags in the first stage model. Default is 0, i.e. only contemporaneous variables are used.}
+  \item{Xreg}{Exogenous controls.}
+
+}
+
+\value{
+This function returns a vector with two numeric items:
+
+- Estimated t0,
+- Norm of the delta statistics in t0.
+
+}
+
+
+\references{
+Carvalho, Carlos, Ricardo Masini, and Marcelo C. Medeiros. "ARCO: An Artificial Counterfactual Approach For High-Dimensional Panel Time-Series Data." (2016).
+
+}
+
+\examples{
+
+#############################
+## === Example for q=1 === ##
+#############################
+data(data.q1) # = First unity was treated on t=51 by adding a constant equal 3
+
+data=list(data.q1) # = Even if q=1 the data must be in a list
+
+## == Fitting the ARCO using linear regression == ##
+
+# = creating fn and p.fn function = #
+fn=function(X,y){
+  return(lm(y~X))
+}
+p.fn=function(model,newdata){
+  b=coef(model)
+  return(cbind(1,newdata)%*%b)
+}
+
+t0a=estimate_lambda0(data = data,fn = fn, p.fn = p.fn, treated.unity = 1 )
+
+
+#############################
+## === Example for q=2 === ##
+#############################
+
+# = First unity was treated on t=51 by adding constants 3 and -3 for the first and second variables
+data(data.q2) # data is already a list
+
+## == Detecting lambda0 using the package glmnet via LASSO and crossvalidation == ##
+require(glmnet)
+
+t0b=estimate_lambda0(data = data.q2,fn = cv.glmnet, p.fn = predict, treated.unity = 1)
+  
+}
