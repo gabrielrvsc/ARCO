@@ -7,7 +7,7 @@ estimate_t0(data, fn, p.fn, start=0.3, end=0.95, treated.unity=1, lag=0 Xreg=NUL
 
 \description{
 
-  This description can be useful to clarify the notation and understand how the arguments must be supplied to the functions. 
+  This description may be useful to clarify the notation and understand how the arguments must be supplied to the functions. 
   
   \item{units} {Each unity is indexed by a number between $1,...,n$. They are for exemple: countries, states, municipalities, firms, etc. }
   \item{Variables}{ For each unity and for every time period $t=1,...,T$ we observe $q_i \geq 1$ variables. They are for example: GDP, inflation, sales, etc.}
