@@ -7,11 +7,11 @@ fitARCO(data,fn,p.fn,treated.unity=1,t0,lag=0,Xreg=NULL,display=TRUE,HACweights=
 
 \description{
 
-  This description can be useful to clarify the notation and understand how the arguments must be supplied to the functions. 
+  This description may be useful to clarify the notation and understand how the arguments must be supplied to the functions. 
   
-  - units: Each unity is indexed by a number between $1,...,n$. They are for exemple: countries, states, municipalities, firms, etc. 
-  - Variables: For each unity and for every time period $t=1,...,T$ we observe $q_i \geq 1$ variables. They are for example: GDP, inflation, sales, etc.
-  - Intervention: The intervention took place only in the treated unity at time $T_0=\lambda_0 T$, where $\lambda_0 \in (0,1)$.
+  \item{units} {Each unity is indexed by a number between $1,...,n$. They are for exemple: countries, states, municipalities, firms, etc. }
+  \item{Variables}{ For each unity and for every time period $t=1,...,T$ we observe $q_i \geq 1$ variables. They are for example: GDP, inflation, sales, etc.}
+  \item{Intervention}{ The intervention took place only in the treated unity at time $T_0=\lambda_0 T$, where $\lambda_0 \in (0,1)$.}
 }
   
 
