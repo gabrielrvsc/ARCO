@@ -63,7 +63,7 @@ p.fn=function(model,newdata){
   return(cbind(1,newdata)%*%b)
 }
 
-t0a=estimate_lambda0(data = data,fn = fn, p.fn = p.fn, treated.unity = 1 )
+t0a=estimate_t0(data = data,fn = fn, p.fn = p.fn, treated.unity = 1 )
 
 
 #############################
@@ -76,6 +76,6 @@ data(data.q2) # data is already a list
 ## == Detecting lambda0 using the package glmnet via LASSO and crossvalidation == ##
 require(glmnet)
 
-t0b=estimate_lambda0(data = data.q2,fn = cv.glmnet, p.fn = predict, treated.unity = 1)
+t0b=estimate_t0(data = data.q2,fn = cv.glmnet, p.fn = predict, treated.unity = 1)
   
 }
