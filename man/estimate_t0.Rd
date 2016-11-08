@@ -8,12 +8,12 @@ estimate_t0(data, fn, p.fn, start=0.3, end=0.95, treated.unity=1, lag=0 Xreg=NUL
 \description{
 
   This description may be useful to clarify the notation and understand how the arguments must be supplied to the functions. 
-  
-  \item{units} {Each unity is indexed by a number between $1,...,n$. They are for exemple: countries, states, municipalities, firms, etc. }
-  \item{Variables}{ For each unity and for every time period $t=1,...,T$ we observe $q_i \geq 1$ variables. They are for example: GDP, inflation, sales, etc.}
-  \item{Intervention}{ The intervention took place only in the treated unity at time $T_0=\lambda_0 T$, where $\lambda_0 \in (0,1)$.}
+  \enumerate{
+  \item units: Each unity is indexed by a number between \eqn{1,...,n}. They are for exemple: countries, states, municipalities, firms, etc. 
+  \item Variables:  For each unity and for every time period \eqn{t=1,...,T} we observe \eqn{q_i \geq 1} variables. They are for example: GDP, inflation, sales, etc.
+  \item Intervention:  The intervention took place only in the treated unity at time \eqn{T_0=\lambda_0 T}, where \eqn{\lambda_0 \in (0,1)}.
 }
-  
+}
 
 \arguments{
   \item{data}{A list of matrixes or dataframes of length $q$. Each matrix is $T \times n$ and it contains observations of a single variable for all units and all periods of time. Even in the case of a single variable ($q=1$), the matrix must be inside a list.}
