@@ -33,5 +33,5 @@ estimate_lambda0=function(data,fn,p.fn,start=0.3,end=0.95,treated.unity=1,lag=0,
   lambda0=which(delta.norm==max(delta.norm))
   delta=delta.norm[lambda0]
   
-  return(c("lambda0"=lambda0,"delta"=delta))
+  return(c("lambda0"=lambda0,"delta.norm"=delta))
 }
