@@ -31,7 +31,7 @@ estimate_t0=function(data,fn,p.fn,start=0.3,end=0.95,treated.unity=1,lag=0,Xreg=
   
   delta.norm=sqrt(rowSums((save.delta)^2))
   t0=which(delta.norm==max(delta.norm))
-  delta=delta.norm[lambda0]
+  delta=delta.norm[t0]
   
   return(c("to"=t0,"delta.norm"=delta))
 }
