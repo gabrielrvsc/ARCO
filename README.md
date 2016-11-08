@@ -1,2 +1,2 @@
 # ARCO
-Set of functions to analyse an estimate Artificial Counterfactual
+Set of functions to analyse and estimate Artificial Counterfactual
