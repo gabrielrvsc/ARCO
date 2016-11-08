@@ -24,7 +24,7 @@ estimate_lambda0=function(data,fn,p.fn,start=0.3,end=0.95,treated.unity=1,lag=0,
   
   save.delta=matrix(0,T,length(data))
   for(i in starting.point:ending.point){
-    m=fit.ARCO(data=data,fn=fn,p.fn = p.fn,treated.unity=treated.unity,lag=lag, t0=i,Xreg=Xreg,display = FALSE)
+    m=fitARCO(data=data,fn=fn,p.fn = p.fn,treated.unity=treated.unity,lag=lag, t0=i,Xreg=Xreg,display = FALSE)
     delta=m$delta[2]
     save.delta[i,]=delta
   }
