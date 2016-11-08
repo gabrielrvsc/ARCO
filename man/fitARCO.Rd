@@ -1,1 +1,98 @@
+\name{fitARCO}
+\alias{fitARCO}
+\title{Estimates the ARCO using the model selected by the user.}
+\usage{
+fitARCO=function(data,fn,p.fn,treated.unity=1,t0,lag=0,Xreg=NULL,display=TRUE,HACweights=1,alpha=0.05)
+}
 
+\description{
+
+  This description can be useful to clarify the notation and understand how the arguments must be supplied to the functions. 
+  
+  - units: Each unity is indexed by a number between $1,...,n$. They are for exemple: countries, states, municipalities, firms, etc. 
+  - Variables: For each unity and for every time period $t=1,...,T$ we observe $q_i \geq 1$ variables. They are for example: GDP, inflation, sales, etc.
+  - Intervention: The intervention took place only in the treated unity at time $T_0=\lambda_0 T$, where $\lambda_0 \in (0,1)$.
+}
+  
+
+\arguments{
+  \item{data}{A list of matrixes or dataframes of length $q$. Each matrix is $T \times n$ and it contains observations of a single variable for all units and all periods of time. Even in the case of a single variable ($q=1$), the matrix must be inside a list.}
+
+  \item{fn}{The function used to estimate the first stage model. This function must receive only two arguments in the following order: X (independent variables), y (dependent variable). If the model requires additional arguments they must be supplied inside the function fn.}
+  \item{p.fn}{The function used to estimate the predict using the first stage model. This function also must receive only two arguments in the following order: model (model estimated in the first stage), newdata (out of sample data to estimate the second stage). If the prediction requires additional arguments they must be supplied inside the function p.fn.}
+  \item{treated.unity}{Single number indicating the unity where the intervention took place.}  
+  \item{t0}{Single number indicating the intervention period.}
+  \item{lag}{Number of lags in the first stage model. Default is 0, i.e. only contemporaneous variables are used.}
+  \item{Xreg}{Exogenous controls.}
+  \item{display}{Default is TRUE. Shows the counterfactual plot automaticaly.}
+  \item{HECweigths}{Vector of weights for the robust covariance matrix of the delta statistics. Default is 1 for the lag 0 and 0 for all other lags.}
+  \item{alpha}{Significance level for the delta.}  
+}
+
+\value{
+This function returns a list with the following itens: 
+
+  \item{cf}{$T_2 \times q$ matrix with the counterfactual for each variable of the treated unity.}
+  \item{model}{list with $q$ models, one for each $q$ of the treated unity.}
+  \item{delta}{delta statistic and confidence intervals.}
+ 
+
+}
+
+
+\references{
+Carvalho, Carlos, Ricardo Masini, and Marcelo C. Medeiros. "ARCO: An Artificial Counterfactual Approach For High-Dimensional Panel Time-Series Data." (2016).
+
+}
+
+\examples{
+
+#############################
+## === Example for q=1 === ##
+#############################
+data(data.q1) # = First unity was treated on t=51 by adding a constant equal 3
+
+data=list(data.q1) # = Even if q=1 the data must be in a list
+
+## == Fitting the ARCO using linear regression == ##
+
+# = creating fn and p.fn function = #
+fn=function(X,y){
+  return(lm(y~X))
+}
+p.fn=function(model,newdata){
+  b=coef(model)
+  return(cbind(1,newdata)%*%b)
+}
+
+ARCO=fitARCO(data = data,fn = fn, p.fn = p.fn, treated.unity = 1 , t0 = 51)
+
+  
+
+#############################
+## === Example for q=2 === ##
+#############################
+
+
+# = First unity was treated on t=51 by adding constants 3 and -3 for the first and second variables
+data(data.q2) # data is already a list
+
+## == Fitting the ARCO using the package randomForest == ##
+require(randomForest)
+
+## == Bartlett kernel weights for two lags == ##
+l=2
+w <- seq(1, 0, by = -(1/(l + 1)))[1:(l+1)]
+
+ARCO2=fitARCO(data = data.q2,fn = randomForest, p.fn = predict, treated.unity = 1 , t0 = 51, HACweights = w)
+
+
+## == Fitting the ARCO using the package glmnet via LASSO and crossvalidation == ##
+require(glmnet)
+
+## == Bartlett kernel weights for two lags == ##
+
+ARCO3=fitARCO(data = data.q2,fn = cv.glmnet, p.fn = predict, treated.unity = 1 , t0 = 51, HACweights = w)
+
+  
+}
