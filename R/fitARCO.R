@@ -1,4 +1,4 @@
-fit.ARCO=function(data,fn,p.fn,treated.unity=1,t0,lag=0,Xreg=NULL,display=TRUE,HACweights=1,alpha=0.05){
+fitARCO=function(data,fn,p.fn,treated.unity=1,t0,lag=0,Xreg=NULL,display=TRUE,HACweights=1,alpha=0.05){
   
   for(i in 1:length(data)){
     if(is.null(colnames(data[[i]]))){
