@@ -3,7 +3,7 @@ estimate_lambda0=function(data,fn,p.fn,start=0.3,end=0.95,treated.unity=1,lag=0,
   for(i in 1:length(data)){
     if(is.null(colnames(data[[i]]))){
       colnames(data[[i]])=paste("V",i,"-U",1:ncol(data[[i]]),sep="")
-      cat("Variable names not informed. Automatic names supplied.")
+      cat("Variable names not informed. Automatic names supplied. \n")
     }
   }
   
@@ -12,7 +12,7 @@ estimate_lambda0=function(data,fn,p.fn,start=0.3,end=0.95,treated.unity=1,lag=0,
     k=ncol(data[[i]])
     if(aux<k){
       colnames(data[[i]])=paste("V",i,"-U",1:ncol(data[[i]]),sep="")
-      cat("Some variables had no name. Automatic names supplied.")
+      cat("Some variables had no name. Automatic names supplied. \n")
     }
   }
   
