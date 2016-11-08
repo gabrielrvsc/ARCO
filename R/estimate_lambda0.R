@@ -9,7 +9,7 @@ estimate_lambda0=function(data,fn,p.fn,start=0.3,end=0.95,treated.unity=1,lag=0,
   
   for(i in 1:length(data)){
     aux=length(unique(colnames(data[[i]])))
-    K=ncol(data[[i]])
+    k=ncol(data[[i]])
     if(aux<k){
       colnames(data[[i]])=paste("V",i,"-U",1:ncol(data[[i]]),sep="")
       cat("Some variables had no name. Automatic names supplied.")
