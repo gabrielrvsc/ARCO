@@ -30,7 +30,7 @@ fitARCO=function(data,fn,p.fn,treated.unity,t0,lag=0,Xreg=NULL,display=TRUE,HACw
     Y=tail(Y,nrow(X))
   }
   
-  if(length(Xreg)==0){
+  if(length(Xreg)!=0){##mudou
     X=cbind(X,tail(Xreg,nrow(X)))
   }
   
