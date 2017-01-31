@@ -89,7 +89,7 @@ fitARCO=function(data,fn,p.fn,treated.unity,t0,lag=0,Xreg=NULL,display=TRUE,HACw
     par(mfrow=c(1,length(data)))
     for(i in 1:ncol(Y.raw)){
       plot(Y.raw[,i],type="l",ylab=paste("Y",i,sep=""),xlab="Time",...)
-      lines(c(rep(NA,t0-2),Y[t0-1,i],save.cf[,i]),col=2)
+      lines(c(rep(NA,t0-2),Y.raw[t0-1,i],save.cf[,i]),col=2)
       abline(v=t0,col="blue",lty=2)
     }
   }
