@@ -1,4 +1,4 @@
-fitARCO=function(data,fn,p.fn,treated.unity,t0,lag=0,Xreg=NULL,display=TRUE,HACweights=1,alpha=0.05){
+fitARCO=function(data,fn,p.fn,treated.unity,t0,lag=0,Xreg=NULL,display=TRUE,HACweights=1,alpha=0.05,...){
   
   for(i in 1:length(data)){
     if(is.null(colnames(data[[i]]))){
@@ -88,7 +88,7 @@ fitARCO=function(data,fn,p.fn,treated.unity,t0,lag=0,Xreg=NULL,display=TRUE,HACw
   if(display==TRUE){
     par(mfrow=c(1,length(data)))
     for(i in 1:ncol(Y.raw)){
-      plot(Y.raw[,i],type="l",ylab=paste("Y",i,sep=""),xlab="Time")
+      plot(Y.raw[,i],type="l",ylab=paste("Y",i,sep=""),xlab="Time",...)
       lines(c(rep(NA,t0-2),Y[t0-1,i],save.cf[,i]),col=2)
       abline(v=t0,col="blue",lty=2)
     }
