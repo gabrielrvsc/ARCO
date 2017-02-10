@@ -1,7 +1,7 @@
 fitARCO=function(data,fn,p.fn,treated.unity,t0,lag=0,Xreg=NULL,display=TRUE,HACweights=1,alpha=0.05,...){
   
-  if(is.null(names(date))){
-    names(data)=paste("Variable",1:length(date),sep="")
+  if(is.null(names(data))){
+    names(data)=paste("Variable",1:length(data),sep="")
     cat("The data list was unnamed. Automatic names supplied. \n")
   }
   
