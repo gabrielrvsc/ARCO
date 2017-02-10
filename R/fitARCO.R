@@ -103,7 +103,8 @@ fitARCO=function(data,fn,p.fn,treated.unity,t0,lag=0,Xreg=NULL,display=TRUE,HACw
   ## == Names == ##
   names(model.list)=names(data)
   colnames(save.cf)=names(data)
-  rownames(save.cf)=tail(rownames(Y.raw),nrow(save.cf))                          
+  rownames(save.cf)=tail(rownames(Y.raw),nrow(save.cf))  
+  rownames(delta.stat)=rownames(data)                          
                             
   return(list("cf"=save.cf,"model"=model.list,"delta"=delta.stat))
 }
