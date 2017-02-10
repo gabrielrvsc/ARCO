@@ -1,5 +1,11 @@
 fitARCO=function(data,fn,p.fn,treated.unity,t0,lag=0,Xreg=NULL,display=TRUE,HACweights=1,alpha=0.05,...){
   
+  if(is.null(names(date))){
+    names(data)=paste("Variable",1:length(date),sep="")
+    cat("The data list was unnamed. Automatic names supplied. \n")
+  }
+  
+  
   for(i in 1:length(data)){
     if(is.null(colnames(data[[i]]))){
       colnames(data[[i]])=paste("V",i,"-U",1:ncol(data[[i]]),sep="")
@@ -94,5 +100,10 @@ fitARCO=function(data,fn,p.fn,treated.unity,t0,lag=0,Xreg=NULL,display=TRUE,HACw
     }
   }
   
+  ## == Names == ##
+  names(model.list)=names(data)
+  colnames(cf)=names(data)
+  rownames(cf)=tail(rownames(Y.raw),nrow(cf))                          
+                            
   return(list("cf"=save.cf,"model"=model.list,"delta"=delta.stat))
 }
