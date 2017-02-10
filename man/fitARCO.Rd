@@ -9,16 +9,16 @@ fitARCO(data,fn,p.fn,treated.unity=1,t0,lag=0,Xreg=NULL,display=TRUE,HACweights=
 
   This description may be useful to clarify the notation and understand how the arguments must be supplied to the functions. 
   \enumerate{
-  \item units: Each unity is indexed by a number between \eqn{1,...,n}. They are for exemple: countries, states, municipalities, firms, etc. 
-  \item Variables:  For each unity and for every time period \eqn{t=1,...,T} we observe \eqn{q_i \geq 1} variables. They are for example: GDP, inflation, sales, etc.
-  \item Intervention:  The intervention took place only in the treated unity at time \eqn{T_0=\lambda_0 T}, where \eqn{\lambda_0 \in (0,1)}.
+  \item units: Each unity is indexed by a number between 1,...,n. They are for exemple: countries, states, municipalities, firms, etc. 
+  \item Variables:  For each unity and for every time period t=1,...,T we observe q_i >= 1 variables. They are for example: GDP, inflation, sales, etc.
+  \item Intervention:  The intervention took place only in the treated unity at time t0=L0*T, where L0 is in (0,1).
 }
 }
                
   
 
 \arguments{
-  \item{data}{A list of matrixes or dataframes of length $q$. Each matrix is $T \times n$ and it contains observations of a single variable for all units and all periods of time. Even in the case of a single variable ($q=1$), the matrix must be inside a list.}
+  \item{data}{A list of matrixes or dataframes of length q. Each matrix is T X n and it contains observations of a single variable for all units and all periods of time. Even in the case of a single variable (q=1), the matrix must be inside a list.}
 
   \item{fn}{The function used to estimate the first stage model. This function must receive only two arguments in the following order: X (independent variables), y (dependent variable). If the model requires additional arguments they must be supplied inside the function fn.}
   \item{p.fn}{The function used to estimate the predict using the first stage model. This function also must receive only two arguments in the following order: model (model estimated in the first stage), newdata (out of sample data to estimate the second stage). If the prediction requires additional arguments they must be supplied inside the function p.fn.}
@@ -34,8 +34,8 @@ fitARCO(data,fn,p.fn,treated.unity=1,t0,lag=0,Xreg=NULL,display=TRUE,HACweights=
 \value{
 This function returns a list with the following itens: 
 
-  \item{cf}{$T_2 \times q$ matrix with the counterfactual for each variable of the treated unity.}
-  \item{model}{list with $q$ models, one for each $q$ of the treated unity.}
+  \item{cf}{T2 X q matrix with the counterfactual for each variable of the treated unity.}
+  \item{model}{list with q models, one for each variable of the treated unity.}
   \item{delta}{delta statistic and confidence intervals.}
  
 
@@ -43,7 +43,7 @@ This function returns a list with the following itens:
 
 
 \references{
-Carvalho, Carlos, Ricardo Masini, and Marcelo C. Medeiros. "ARCO: An Artificial Counterfactual Approach For High-Dimensional Panel Time-Series Data." (2016).
+Carvalho, C., Masini, R., Medeiros, M. (2016) "ARCO: An Artificial Counterfactual Approach For High-Dimensional Panel Time-Series Data.".
 
 }
 
