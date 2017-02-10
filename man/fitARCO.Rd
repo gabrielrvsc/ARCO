@@ -29,7 +29,7 @@ fitARCO(data,fn,p.fn,treated.unity=1,t0,lag=0,Xreg=NULL,display=TRUE,HACweights=
   \item{display}{Default is TRUE. Shows the counterfactual plot automaticaly.}
   \item{HECweigths}{Vector of weights for the robust covariance matrix of the delta statistics. Default is 1 for the lag 0 and 0 for all other lags.}
   \item{alpha}{Significance level for the delta.}  
-  \item{...}{Aditional parameters used only if display = TRUE.  }       
+  \item{...}{Aditional parameters used only if display = TRUE.}       
 }
 
 \value{
