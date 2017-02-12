@@ -1,11 +1,16 @@
 Package: ARCO
-Type: Package
 Title: Artificial Counterfactual Package
 Version: 0.1
 Date: 2016-11-08
-Author: Gabriel Vasconcelos
+Authors@R: c(person("Gabriel", "Vasconcelos", email="gabrielrvsc@yahoo.com.br", role = c("aut", "cre")))
 Maintainer: Gabriel Vasconcelos <gabrielrvsc@yahoo.com.br>
-Description: Set of functions to analyse and estimate Artificial Counterfactual models from Carvalho, Mansini and Medeiros (2016)
-License: -----
+BugReports: https://github.com/gabrielrvsc/ARCO/issues
+Description: Set of functions to analyse and estimate Artificial Counterfactual models from Carvalho, Mansini and Medeiros (2016).
+License: MIT + file LICENSE
+Encoding: UTF-8
 LazyData: TRUE
-Depends: Matrix
+RoxygenNote: 6.0.1
+Imports: 
+    Matrix,
+    glmnet,
+    randomForest
