@@ -1,3 +1,66 @@
+#' Estimates the ARCO using the model selected by the user
+#' 
+#'   This description may be useful to clarify the notation and understand how the arguments must be supplied to the functions. 
+#' * units: Each unity is indexed by a number between 1,...,n. They are for exemple: countries, states, municipalities, firms, etc. 
+#' * Variables:  For each unity and for every time period t=1,...,T we observe q_i >= 1 variables. They are for example: GDP, inflation, sales, etc.
+#' * Intervention:  The intervention took place only in the treated unity at time t0=L0*T, where L0 is in (0,1).
+#' @param data A list of matrixes or dataframes of length q. Each matrix is T X n and it contains observations of a single variable for all units and all periods of time. Even in the case of a single variable (q=1), the matrix must be inside a list.
+#' @param fn The function used to estimate the first stage model. This function must receive only two arguments in the following order: X (independent variables), y (dependent variable). If the model requires additional arguments they must be supplied inside the function fn.
+#' @param p.fn The function used to estimate the predict using the first stage model. This function also must receive only two arguments in the following order: model (model estimated in the first stage), newdata (out of sample data to estimate the second stage). If the prediction requires additional arguments they must be supplied inside the function p.fn.
+#' @param treated.unity Single number indicating the unity where the intervention took place.
+#' @param t0 Single number indicating the intervention period.
+#' @param lag Number of lags in the first stage model. Default is 0, i.e. only contemporaneous variables are used.
+#' @param Xreg Exogenous controls.
+#' @param display Default is TRUE. Shows the counterfactual plot automaticaly.
+#' @param HACweights Vector of weights for the robust covariance matrix of the delta statistics. Default is 1 for the lag 0 and 0 for all other lags.
+#' @param alpha Significance level for the delta.
+#' @param ... Aditional parameters used only if display = TRUE.
+#' @keywords ARCO
+#' @export
+#' @import Matrix glmnet randomForest
+#' @importFrom graphics abline lines par plot
+#' @importFrom stats cov embed qnorm
+#' @examples 
+#' #############################
+   ## === Example for q=1 === ##
+   #############################
+#' data(data.q1) # = First unity was treated on t=51 by adding a constant equal 3
+#' data=list(data.q1) # = Even if q=1 the data must be in a list
+#' ## == Fitting the ARCO using linear regression == ##
+#' # = creating fn and p.fn function = #
+#' fn=function(X,y){
+#' return(lm(y~X))
+#' }
+#' p.fn=function(model,newdata){
+#' b=coef(model)
+#' return(cbind(1,newdata) %*% b)}
+#' ARCO=fitARCO(data = data,fn = fn, p.fn = p.fn, treated.unity = 1 , t0 = 51)
+#' 
+#' #############################
+   ## === Example for q=2 === ##
+   #############################
+#' 
+#' # = First unity was treated on t=51 by adding constants 3 and -3 for the first and second variables
+#' data(data.q2) # data is already a list
+#' ## == Fitting the ARCO using the package randomForest == ##
+#' require(randomForest)
+#' ## == Bartlett kernel weights for two lags == ##
+#' l=2
+#' w <- seq(1, 0, by = -(1/(l + 1)))[1:(l+1)]
+#' ARCO2=fitARCO(data = data.q2,fn = randomForest, p.fn = predict,
+#' treated.unity = 1 , t0 = 51, HACweights = w)
+#' ## == Fitting the ARCO using the package glmnet via LASSO and crossvalidation == ##
+#' require(glmnet)
+#' ## == Bartlett kernel weights for two lags == ##
+#' ARCO3=fitARCO(data = data.q2,fn = cv.glmnet, p.fn = predict, 
+#' treated.unity = 1 , t0 = 51, HACweights = w)
+#'
+#' @references Carvalho, C., Masini, R., Medeiros, M. (2016) "ARCO: An Artificial Counterfactual Approach For High-Dimensional Panel Time-Series Data.".
+
+
+
+
+
 fitARCO=function(data,fn,p.fn,treated.unity,t0,lag=0,Xreg=NULL,display=TRUE,HACweights=1,alpha=0.05,...){
   
   if(is.null(names(data))){
