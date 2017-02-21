@@ -129,6 +129,9 @@ fitARCO=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL,
   tauk1bart = 0
   tauk2bart = 0
   M = length(HACweights) - 1
+  if(M>=nrow(v2)){
+     stop("HAC lags bigger than treatment.")
+  }                             
   if (M > 0) {
     for (k in 1:M) {
       aux = cov(v1[(1 + k):nrow(v1), ], v1[1:(nrow(v1) - k), ])
