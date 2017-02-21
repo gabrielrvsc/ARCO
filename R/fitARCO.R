@@ -164,5 +164,5 @@ fitARCO=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL,
   colnames(save.cf) = names(data)
   rownames(save.cf) = tail(rownames(Y.raw), nrow(save.cf))
   rownames(delta.stat) = names(data)
-  return(list(cf = save.cf, model = model.list, delta = delta.stat,w=w/sqrt(nrow(X)))
+  return(list(cf = save.cf, model = model.list, delta = delta.stat,w=w/sqrt(nrow(X))))
 }
