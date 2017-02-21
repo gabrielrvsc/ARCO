@@ -134,7 +134,7 @@ fitARCO=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL,
       aux = cov(v1[(1 + k):nrow(v1), ], v1[1:(nrow(v1) - k), ])
       tauk1bart = tauk1bart + (aux + t(aux)) * HACweights[i + 1]
       
-      aux = cov(v1[(1 + k):nrow(v1), ], v1[1:(nrow(v1) -  k), ])
+      aux = cov(v2[(1 + k):nrow(v2), ], v2[1:(nrow(v2) -  k), ])
       tauk2bart = tauk2bart + (aux + t(aux)) * HACweights[i + 1]
     }
   }
