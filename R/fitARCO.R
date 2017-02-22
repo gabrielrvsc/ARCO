@@ -66,13 +66,11 @@ fitARCO=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL,
 {
   if (is.null(names(data))) {
     names(data) = paste("Variable", 1:length(data), sep = "")
-    cat("The data list was unnamed. Automatic names supplied. \n")
   }
   for (i in 1:length(data)) {
     if (is.null(colnames(data[[i]]))) {
       colnames(data[[i]]) = paste("V", i, "-U", 1:ncol(data[[i]]), 
                                   sep = "")
-      cat("Variable names not informed. Automatic names supplied. \n")
     }
   }
   for (i in 1:length(data)) {
@@ -81,14 +79,12 @@ fitARCO=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL,
     if (aux < k) {
       colnames(data[[i]]) = paste("V", i, "-U", 1:ncol(data[[i]]), 
                                   sep = "")
-      cat("Some variables had no name. Automatic names supplied. \n")
     }
   }
   if (length(data) == 1) {
     Y = matrix(data[[1]][, treated.unity], ncol = 1)
     X = data[[1]][, -treated.unity]
-  }
-  else {
+  } else {
     Y = Reduce("cbind", lapply(data, function(x) x[, treated.unity]))
     X = Reduce("cbind", lapply(data, function(x) x[, -treated.unity]))
   }
@@ -117,41 +113,40 @@ fitARCO=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL,
     save.cf[, i] = contra.fact
     save.fitted[, i] = p.fn(model, X)
   }
+  
+  ##
   delta.aux = tail(Y.raw, nrow(save.cf)) - save.cf
   delta = colMeans(delta.aux)
   aux = matrix(0, nrow(X), length(data))
-  aux[t0:nrow(aux), ] = 1
-  vhat = Y - (save.fitted + aux * delta)
-  v1 = matrix(vhat[1:(t0 - 1), ], ncol = length(data))
-  v2 = matrix(vhat[t0:nrow(vhat), ], ncol = length(data))
+  aux[(t0-lag):nrow(aux), ] = 1
+  vhat = Y - (save.fitted + t(t(aux) * delta))
+  v1 = matrix(vhat[1:(t0-lag - 1), ], ncol = length(data))
+  v2 = matrix(vhat[(t0-lag):nrow(vhat), ], ncol = length(data))
   tau01 = cov(v1) * HACweights[1]
   tau02 = cov(v2) * HACweights[1]
   tauk1bart = 0
   tauk2bart = 0
   M = length(HACweights) - 1
-  if(M>=nrow(v2)){
-     stop("HAC lags bigger than treatment.")
-  }                             
+  if (M >= nrow(v2)) {
+    stop("HAC lags bigger than treatment.")
+  }
   if (M > 0) {
     for (k in 1:M) {
       aux = cov(v1[(1 + k):nrow(v1), ], v1[1:(nrow(v1) - k), ])
-      tauk1bart = tauk1bart + (aux + t(aux)) * HACweights[i + 1]
-      
-      aux = cov(v2[(1 + k):nrow(v2), ], v2[1:(nrow(v2) -  k), ])
-      tauk2bart = tauk2bart + (aux + t(aux)) * HACweights[i + 1]
+      tauk1bart = tauk1bart + (aux + t(aux)) * HACweights[k +  1]
+      aux = cov(v2[(1 + k):nrow(v2), ], v2[1:(nrow(v2) - k), ])
+      tauk2bart = tauk2bart + (aux + t(aux)) * HACweights[k + 1]
     }
   }
-  
   tauT1 = tau01 + tauk1bart
   tauT2 = tau02 + tauk2bart
-  sigmahat = (tauT1/(t0 - 1) + tauT2/(nrow(X) - t0 + 1))*nrow(X)
-  
+  sigmahat = (tauT1/(t0 - 1) + tauT2/(nrow(X) - t0 + 1)) * nrow(X)
   w = sqrt(diag(sigmahat))
   uI = delta + (w * qnorm(1 - alpha/2))/sqrt(nrow(X))
   lI = delta - (w * qnorm(1 - alpha/2))/sqrt(nrow(X))
   delta.stat = cbind(LB = lI, delta = delta, UB = uI)
   if (display == TRUE) {
-    par(mfrow = c(1, length(data)))
+    par(mfrow = c(ceiling(length(data)/3), min(3,length(data))))
     for (i in 1:ncol(Y.raw)) {
       plot(Y.raw[, i], type = "l", ylab = paste("Y", i, 
                                                 sep = ""), xlab = "Time", ...)
@@ -164,5 +159,6 @@ fitARCO=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL,
   colnames(save.cf) = names(data)
   rownames(save.cf) = tail(rownames(Y.raw), nrow(save.cf))
   rownames(delta.stat) = names(data)
-  return(list(cf = save.cf, model = model.list, delta = delta.stat,w=w/sqrt(nrow(X))))
+  return(list(cf = save.cf, model = model.list, delta = delta.stat, 
+              w = w/sqrt(nrow(X))))
 }
