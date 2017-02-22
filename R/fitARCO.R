@@ -84,13 +84,22 @@ fitARCO=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL,
   if (length(data) == 1) {
     Y = matrix(data[[1]][, treated.unity], ncol = 1)
     X = data[[1]][, -treated.unity]
+    X=as.matrix(X)
+    colnames(X)=paste(names(data),colnames(data[[1]])[-treated.unity],sep=".")
   } else {
     Y = Reduce("cbind", lapply(data, function(x) x[, treated.unity]))
     X = Reduce("cbind", lapply(data, function(x) x[, -treated.unity]))
+    aux=rep(NA,length(data))
+    for(i in 1:length(data)){aux[i]=colnames(data[[i]])[-treated.unity]}
+    colnames(X)=paste(aux,names(data),sep=".")
   }
   Y.raw = Y
   if (lag != 0) {
+    
+    aux1=sort(rep(0:lag,ncol(X)))
+    aux=paste(rep(colnames(X),ncol(X)),"lag",aux1,sep=".")
     X = embed(X, lag + 1)
+    colnames(X)=aux
     Y = tail(Y, nrow(X))
   }
   if (length(Xreg) != 0) {
