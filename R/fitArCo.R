@@ -61,8 +61,7 @@
 
 
 
-fitARCO=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL, 
-          display = TRUE, HACweights = 1, alpha = 0.05, ...) 
+fitArCo=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL, HACweights = 1, alpha = 0.05) 
 {
   if (is.null(names(data))) {
     names(data) = paste("Variable", 1:length(data), sep = "")
@@ -84,22 +83,24 @@ fitARCO=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL,
   if (length(data) == 1) {
     Y = matrix(data[[1]][, treated.unity], ncol = 1)
     X = data[[1]][, -treated.unity]
-    X=as.matrix(X)
-    colnames(X)=paste(names(data),colnames(data[[1]])[-treated.unity],sep=".")
-  } else {
+    X = as.matrix(X)
+    colnames(X) = paste(names(data), colnames(data[[1]])[-treated.unity], 
+                        sep = ".")
+  }else {
     Y = Reduce("cbind", lapply(data, function(x) x[, treated.unity]))
     X = Reduce("cbind", lapply(data, function(x) x[, -treated.unity]))
-    aux=rep(NA,length(data))
-    for(i in 1:length(data)){aux[i]=colnames(data[[i]])[-treated.unity]}
-    colnames(X)=paste(aux,names(data),sep=".")
+    aux = rep(NA, length(data))
+    for (i in 1:length(data)) {
+      aux[i] = colnames(data[[i]])[-treated.unity]
+    }
+    colnames(X) = paste(aux, names(data), sep = ".")
   }
   Y.raw = Y
   if (lag != 0) {
-    
-    aux1=sort(rep(0:lag,ncol(X)))
-    aux=paste(rep(colnames(X),ncol(X)),"lag",aux1,sep=".")
+    aux1 = sort(rep(0:lag, ncol(X)))
+    aux = paste(rep(colnames(X), ncol(X)), "lag", aux1, sep = ".")
     X = embed(X, lag + 1)
-    colnames(X)=aux
+    colnames(X) = aux
     Y = tail(Y, nrow(X))
   }
   if (length(Xreg) != 0) {
@@ -122,15 +123,13 @@ fitARCO=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL,
     save.cf[, i] = contra.fact
     save.fitted[, i] = p.fn(model, X)
   }
-  
-  ##
   delta.aux = tail(Y.raw, nrow(save.cf)) - save.cf
   delta = colMeans(delta.aux)
   aux = matrix(0, nrow(X), length(data))
-  aux[(t0-lag):nrow(aux), ] = 1
+  aux[(t0 - lag):nrow(aux), ] = 1
   vhat = Y - (save.fitted + t(t(aux) * delta))
-  v1 = matrix(vhat[1:(t0-lag - 1), ], ncol = length(data))
-  v2 = matrix(vhat[(t0-lag):nrow(vhat), ], ncol = length(data))
+  v1 = matrix(vhat[1:(t0 - lag - 1), ], ncol = length(data))
+  v2 = matrix(vhat[(t0 - lag):nrow(vhat), ], ncol = length(data))
   tau01 = cov(v1) * HACweights[1]
   tau02 = cov(v2) * HACweights[1]
   tauk1bart = 0
@@ -141,33 +140,35 @@ fitARCO=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL,
   }
   if (M > 0) {
     for (k in 1:M) {
-      aux = cov(v1[(1 + k):nrow(v1), ], v1[1:(nrow(v1) - k), ])
-      tauk1bart = tauk1bart + (aux + t(aux)) * HACweights[k +  1]
-      aux = cov(v2[(1 + k):nrow(v2), ], v2[1:(nrow(v2) - k), ])
-      tauk2bart = tauk2bart + (aux + t(aux)) * HACweights[k + 1]
+      aux = cov(v1[(1 + k):nrow(v1), ], v1[1:(nrow(v1) - 
+                                                k), ])
+      tauk1bart = tauk1bart + (aux + t(aux)) * HACweights[k + 
+                                                            1]
+      aux = cov(v2[(1 + k):nrow(v2), ], v2[1:(nrow(v2) - 
+                                                k), ])
+      tauk2bart = tauk2bart + (aux + t(aux)) * HACweights[k + 
+                                                            1]
     }
   }
   tauT1 = tau01 + tauk1bart
   tauT2 = tau02 + tauk2bart
-  sigmahat = (tauT1/(t0 - 1) + tauT2/(nrow(X) - t0 + 1)) * nrow(X)
+  sigmahat = (tauT1/(t0 - 1) + tauT2/(nrow(X) - t0 + 1)) * 
+    nrow(X)
   w = sqrt(diag(sigmahat))
+  W = nrow(X)*t(delta)%*%solve(sigmahat)%*%delta
+  p.value=1-pchisq(W,length(delta))
   uI = delta + (w * qnorm(1 - alpha/2))/sqrt(nrow(X))
   lI = delta - (w * qnorm(1 - alpha/2))/sqrt(nrow(X))
   delta.stat = cbind(LB = lI, delta = delta, UB = uI)
-  if (display == TRUE) {
-    par(mfrow = c(ceiling(length(data)/3), min(3,length(data))))
-    for (i in 1:ncol(Y.raw)) {
-      plot(Y.raw[, i], type = "l", ylab = paste("Y", i, 
-                                                sep = ""), xlab = "Time", ...)
-      lines(c(rep(NA, t0 - 2), Y.raw[t0 - 1, i], save.cf[, 
-                                                         i]), col = 2)
-      abline(v = t0, col = "blue", lty = 2)
-    }
-  }
+  
   names(model.list) = names(data)
   colnames(save.cf) = names(data)
   rownames(save.cf) = tail(rownames(Y.raw), nrow(save.cf))
+  colnames(save.fitted) = names(data)
+  rownames(save.fitted) = head(rownames(Y), nrow(save.fitted))
   rownames(delta.stat) = names(data)
-  return(list(cf = save.cf, model = model.list, delta = delta.stat, 
-              w = w/sqrt(nrow(X))))
+  save.fitted=head(save.fitted,nrow(save.fitted)-nrow(save.cf))
+  
+  return(list(cf = save.cf, fitted=save.fitted, model = model.list, delta = delta.stat,p.value=p.value , data=data, t0=t0, treated.unity=treated.unity))
 }
+  
