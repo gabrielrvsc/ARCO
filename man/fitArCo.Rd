@@ -4,7 +4,7 @@
 \alias{fitArCo}
 \title{Estimates the ArCo using the model selected by the user}
 \usage{
-fitARCO(data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL,
+fitArCo(data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL,
   display = TRUE, HACweights = 1, alpha = 0.05, ...)
 }
 \arguments{
