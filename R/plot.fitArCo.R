@@ -1,0 +1,87 @@
+#' Plots realized values and the counter factual estimated by the fitArCo function
+#' 
+#' @param x An ArCo object estimated using the fitArCo function.
+#' @param ylab n dimensional character vector, where n is the length of the plot argument.
+#' @param main n dimensional character vector, where n is the length of the plot argument.
+#' @param plot n dimensional numeric vector where each element represents an ArCo unity. If NULL, all unities will be plotted and ylab. If, for example, plot=c(1,2,5) only unities 1 2 and 5 will be plotted according to the order specified by the user on the fitArCo.
+#' @param ncol Number of columns when multiple plots are displayed.    
+#' @param display.fitted If TRUE the fitted values of the estimation window are also plotted (default=FALSE). 
+#' @param y.min n dimensional numeric vector defining the lower bound for the y axis.
+#' @param y.max n dimensional numeric vector defining the upper bound for the y axis.
+#' @param ... Other graphical parameters to plot.  
+#' @export
+
+plot.fitArCo=function(x,ylab=NULL,main=NULL,plot=NULL,ncol=1,display.fitted=FALSE,y.min=NULL,y.max=NULL,...){
+
+  t0=x$t0
+  data=x$data
+  fitted=x$fitted
+  treated.unity=x$treated.unity
+  cf=x$cf
+  
+  if (length(data) == 1) {
+    Y = matrix(data[[1]][, treated.unity], ncol = 1)
+  }else {
+    Y = Reduce("cbind", lapply(data, function(x) x[, treated.unity]))
+  }
+  
+  aux=nrow(Y)-nrow(fitted)-nrow(cf)
+  if(aux!=0){
+    fitted=rbind(matrix(NA,aux,ncol(fitted)),fitted)
+  }
+  
+  ##
+
+  if (is.null(plot)) {
+    if(is.null(ylab)){
+      ylab=ylab = paste("Y", 1:length(data), sep = "")
+    }
+    if(is.null(y.min)){
+      y.min=apply(rbind(Y,cf),2,min,na.rm=TRUE) 
+    }
+    if(is.null(y.max)){
+      y.max=apply(rbind(Y,cf),2,max,na.rm=TRUE)
+    } 
+    
+  } else {
+    if(is.null(ylab)){
+      ylab=ylab = paste("Y", plot, sep = "")
+    }
+    if(is.null(y.min)){
+      y.min=apply(as.matrix(rbind(Y,cf)[,plot]),2,min,na.rm=TRUE) 
+    }
+    if(is.null(y.max)){
+      y.max=apply(as.matrix(rbind(Y,cf)[,plot]),2,max,na.rm=TRUE)
+    } 
+  }
+  
+  
+  if(is.null(plot)){
+    par(mfrow = c(ceiling(length(data)/ncol), ncol))
+    for (i in 1:ncol(Y)) {
+      graphics::plot(Y[, i], type = "l", ylab = ylab[i], xlab = "Time",main=main[i],ylim=c(y.min[i],y.max[i]),...)
+      graphics::lines(c(rep(NA, t0 - 2), Y[t0 - 1, i], cf[, i]), col = "blue")
+      graphics::abline(v = t0, col = "blue", lty = 2)
+      if(display.fitted==TRUE){
+        graphics::lines(fitted[,i],col="red")
+        graphics::legend("topleft",legend = c("Observed","Fitted","Counter Fact."),col=c(1,2,4),
+               lwd=c(1,1,1),lty=c(1,1,1),bty="n",xjust=1,seg.len = 1,y.intersp=0.5)
+      }
+    }
+  }else{
+    par(mfrow = c(ceiling(length(plot)/ncol), ncol))  
+    for(i in 1:length(plot)){
+      graphics::plot(Y[, plot[i]], type = "l", ylab = ylab[i], xlab = "Time",main=main[i],ylim=c(y.min[i],y.max[i]),...)
+      graphics::lines(c(rep(NA, t0 - 2), Y[t0 - 1, plot[i]], cf[, plot[i]]), col = "blue")
+      graphics::abline(v = t0, col = "blue", lty = 2)
+      if(display.fitted==TRUE){
+        graphics::lines(fitted[,plot[i]],col="red")
+        graphics::legend("topleft",legend = c("Observed","Fitted","Counter Fact."),col=c(1,2,4),
+               lwd=c(1,1,1),lty=c(1,1,1),bty="n",xjust=1,seg.len = 1,y.intersp=0.7)
+      }
+    }
+  }
+
+}
+
+

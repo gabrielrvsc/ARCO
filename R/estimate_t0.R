@@ -4,7 +4,7 @@
 #' * units: Each unity is indexed by a number between 1,...,n. They are for exemple: countries, states, municipalities, firms, etc. 
 #' * Variables:  For each unity and for every time period t=1,...,T we observe q_i >= 1 variables. They are for example: GDP, inflation, sales, etc.
 #' * Intervention:  The intervention took place only in the treated unity at time t0=L0*T, where L0 is in (0,1).
-#' @inheritParams fitARCO
+#' @inheritParams fitArCo
 #' @param start Initial value of L0 to be tested.
 #' @param end Final value of L0 to be tested.
 #' @export
@@ -17,7 +17,7 @@
 #' 
 #' data=list(data.q1) # = Even if q=1 the data must be in a list
 #' 
-#' ## == Fitting the ARCO using linear regression == ##
+#' ## == Fitting the ArCo using linear regression == ##
 #' 
 #' # = creating fn and p.fn function = #
 #' fn=function(X,y){
@@ -68,7 +68,7 @@ estimate_t0=function (data, fn, p.fn, start = 0.3, end = 0.95, treated.unity = 1
   save.delta = matrix(0, T, length(data))
   for (i in starting.point:ending.point) {
     m = fitArCo(data = data, fn = fn, p.fn = p.fn, treated.unity = treated.unity, 
-                lag = lag, t0 = i, Xreg = Xreg, display = FALSE)
+                lag = lag, t0 = i, Xreg = Xreg)
     delta = m$delta[,2]
     save.delta[i, ] = delta
   }

@@ -3,12 +3,12 @@
 \docType{data}
 \name{data.q1}
 \alias{data.q1}
-\title{A dataset use in the examples}
+\title{A dataset used in the examples}
 \format{A matrix with 100 rows and 20 variables}
 \usage{
 data(data.q1)
 }
 \description{
-A dataset use in the examples
+A dataset used in the examples
 }
 \keyword{datasets}
