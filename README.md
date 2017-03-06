@@ -1,7 +1,7 @@
-# ARCO
+# ArCo
 Set of functions to analyse and estimate Artificial Counterfactual
 
 # Functions
 
-- fitARCO
+- fitArCo
 - estimate_lambda0
