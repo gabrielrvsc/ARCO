@@ -38,7 +38,7 @@ data(data.q1) # = First unity was treated on t=51 by adding a constant equal 3
 
 data=list(data.q1) # = Even if q=1 the data must be in a list
 
-## == Fitting the ARCO using linear regression == ##
+## == Fitting the ArCo using linear regression == ##
 
 # = creating fn and p.fn function = #
 fn=function(X,y){
