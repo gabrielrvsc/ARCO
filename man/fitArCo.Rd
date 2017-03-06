@@ -34,6 +34,8 @@ This description may be useful to clarify the notation and understand how the ar
 }
 \examples{
 #############################
+## === Example for q=1 === ##
+#############################
 data(data.q1) # = First unity was treated on t=51 by adding a constant equal 3
 data=list(data.q1) # = Even if q=1 the data must be in a list
 ## == Fitting the ArCo using linear regression == ##
@@ -46,6 +48,8 @@ b=coef(model)
 return(cbind(1,newdata) \%*\% b)}
 ArCo=fitArCo(data = data,fn = fn, p.fn = p.fn, treated.unity = 1 , t0 = 51)
 
+#############################
+## === Example for q=2 === ##
 #############################
 
 # = First unity was treated on t=51 by adding constants 3 and -3 for the first and second variables

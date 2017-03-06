@@ -61,5 +61,5 @@ data(data.q2) # data is already a list
 
 require(glmnet)
 
-t0b=estimate_t0(data = data.q2,fn = cv.glmnet, p.fn = predict, treated.unity = 1)
+t0b=estimate_t0(data = data.q2,fn = cv.glmnet, p.fn = predict, treated.unity = 1, start=0.4)
 }

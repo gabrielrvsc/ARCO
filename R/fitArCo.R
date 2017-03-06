@@ -20,8 +20,8 @@
 #' @importFrom stats cov embed qnorm
 #' @examples 
 #' #############################
-   ## === Example for q=1 === ##
-   #############################
+#' ## === Example for q=1 === ##
+#' #############################
 #' data(data.q1) # = First unity was treated on t=51 by adding a constant equal 3
 #' data=list(data.q1) # = Even if q=1 the data must be in a list
 #' ## == Fitting the ArCo using linear regression == ##
@@ -35,8 +35,8 @@
 #' ArCo=fitArCo(data = data,fn = fn, p.fn = p.fn, treated.unity = 1 , t0 = 51)
 #' 
 #' #############################
-   ## === Example for q=2 === ##
-   #############################
+#' ## === Example for q=2 === ##
+#' #############################
 #' 
 #' # = First unity was treated on t=51 by adding constants 3 and -3 for the first and second variables
 #' data(data.q2) # data is already a list
@@ -66,15 +66,16 @@ fitArCo=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL, HACwe
   }
   for (i in 1:length(data)) {
     if (is.null(colnames(data[[i]]))) {
-      colnames(data[[i]]) = paste("V", i, "-U", 1:ncol(data[[i]]), 
+      colnames(data[[i]]) = paste("Unity", 1:ncol(data[[i]]), 
                                   sep = "")
     }
   }
+  ###possible problems in colnames
   for (i in 1:length(data)) {
     aux = length(unique(colnames(data[[i]])))
     k = ncol(data[[i]])
     if (aux < k) {
-      colnames(data[[i]]) = paste("V", i, "-U", 1:ncol(data[[i]]), 
+      colnames(data[[i]]) = paste("Unity", 1:ncol(data[[i]]), 
                                   sep = "")
     }
   }
@@ -87,11 +88,11 @@ fitArCo=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL, HACwe
   }else {
     Y = Reduce("cbind", lapply(data, function(x) x[, treated.unity]))
     X = Reduce("cbind", lapply(data, function(x) x[, -treated.unity]))
-    aux = rep(NA, length(data))
+    aux = list()
     for (i in 1:length(data)) {
-      aux[i] = colnames(data[[i]])[-treated.unity]
+      aux[[i]] = paste(names(data)[i],colnames(data[[i]])[-treated.unity],sep=".")
     }
-    colnames(X) = paste(aux, names(data), sep = ".")
+    colnames(X) = unlist(aux)
   }
   Y.raw = Y
   if (lag != 0) {
@@ -154,7 +155,7 @@ fitArCo=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL, HACwe
     nrow(X)
   w = sqrt(diag(sigmahat))
   W = nrow(X)*t(delta)%*%solve(sigmahat)%*%delta
-  p.value=1-pchisq(W,length(delta))
+  p.value=1-stats::pchisq(W,length(delta))
   uI = delta + (w * qnorm(1 - alpha/2))/sqrt(nrow(X))
   lI = delta - (w * qnorm(1 - alpha/2))/sqrt(nrow(X))
   delta.stat = cbind(LB = lI, delta = delta, UB = uI)
