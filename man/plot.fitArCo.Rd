@@ -5,7 +5,8 @@
 \title{Plots realized values and the counter factual estimated by the fitArCo function}
 \usage{
 \method{plot}{fitArCo}(x, ylab = NULL, main = NULL, plot = NULL,
-  ncol = 1, display.fitted = FALSE, y.min = NULL, y.max = NULL, ...)
+  ncol = 1, display.fitted = FALSE, y.min = NULL, y.max = NULL,
+  confidence.bands = FALSE, alpha = 0.05, ...)
 }
 \arguments{
 \item{x}{An ArCo object estimated using the fitArCo function.}

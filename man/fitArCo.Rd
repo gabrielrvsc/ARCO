@@ -5,7 +5,7 @@
 \title{Estimates the ArCo using the model selected by the user}
 \usage{
 fitArCo(data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL,
-  HACweights = 1, alpha = 0.05)
+  HACweights = 1, alpha = 0.05, boot.cf = FALSE, l = 3, R = 100)
 }
 \arguments{
 \item{data}{A list of matrixes or dataframes of length q. Each matrix is T X n and it contains observations of a single variable for all units and all periods of time. Even in the case of a single variable (q=1), the matrix must be inside a list.}
@@ -27,9 +27,9 @@ fitArCo(data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL,
 \item{alpha}{Significance level for the delta.}
 }
 \description{
-This description may be useful to clarify the notation and understand how the arguments must be supplied to the functions. 
-* units: Each unity is indexed by a number between 1,...,n. They are for exemple: countries, states, municipalities, firms, etc. 
-* Variables:  For each unity and for every time period t=1,...,T we observe q_i >= 1 variables. They are for example: GDP, inflation, sales, etc.
+This description may be useful to clarify the notation and understand how the arguments must be supplied to the functions. \cr \cr
+* units: Each unity is indexed by a number between 1,...,n. They are for exemple: countries, states, municipalities, firms, etc. \cr \cr 
+* Variables:  For each unity and for every time period t=1,...,T we observe q_i >= 1 variables. They are for example: GDP, inflation, sales, etc.\cr \cr
 * Intervention:  The intervention took place only in the treated unity at time t0=L0*T, where L0 is in (0,1).
 }
 \examples{

@@ -1,9 +1,10 @@
 #' Estimates the ArCo using the model selected by the user
 #' 
-#'   This description may be useful to clarify the notation and understand how the arguments must be supplied to the functions. 
-#' * units: Each unity is indexed by a number between 1,...,n. They are for exemple: countries, states, municipalities, firms, etc. 
-#' * Variables:  For each unity and for every time period t=1,...,T we observe q_i >= 1 variables. They are for example: GDP, inflation, sales, etc.
+#' This description may be useful to clarify the notation and understand how the arguments must be supplied to the functions. \cr \cr
+#' * units: Each unity is indexed by a number between 1,...,n. They are for exemple: countries, states, municipalities, firms, etc. \cr \cr 
+#' * Variables:  For each unity and for every time period t=1,...,T we observe q_i >= 1 variables. They are for example: GDP, inflation, sales, etc.\cr \cr
 #' * Intervention:  The intervention took place only in the treated unity at time t0=L0*T, where L0 is in (0,1).
+#' 
 #' @param data A list of matrixes or dataframes of length q. Each matrix is T X n and it contains observations of a single variable for all units and all periods of time. Even in the case of a single variable (q=1), the matrix must be inside a list.
 #' @param fn The function used to estimate the first stage model. This function must receive only two arguments in the following order: X (independent variables), y (dependent variable). If the model requires additional arguments they must be supplied inside the function fn.
 #' @param p.fn The function used to estimate the predict using the first stage model. This function also must receive only two arguments in the following order: model (model estimated in the first stage), newdata (out of sample data to estimate the second stage). If the prediction requires additional arguments they must be supplied inside the function p.fn.
@@ -57,10 +58,14 @@
 
 
 
-
-
-fitArCo=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL, HACweights = 1, alpha = 0.05) 
+fitArCo=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL, HACweights = 1, alpha = 0.05,boot.cf=FALSE,l=3,R=100) 
 {
+  if(boot.cf==TRUE){
+    if(R<10){
+      stop("Minimum number of bootstrap samples is 10.")
+    }
+  }
+  
   if (is.null(names(data))) {
     names(data) = paste("Variable", 1:length(data), sep = "")
   }
@@ -97,7 +102,7 @@ fitArCo=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL, HACwe
   Y.raw = Y
   if (lag != 0) {
     aux1 = sort(rep(0:lag, ncol(X)))
-    aux = paste(rep(colnames(X), ncol(X)), "lag", aux1, sep = ".")
+    aux = paste(rep(colnames(X), lag+1), "lag", aux1, sep = ".")
     X = embed(X, lag + 1)
     colnames(X) = aux
     Y = tail(Y, nrow(X))
@@ -122,6 +127,36 @@ fitArCo=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL, HACwe
     save.cf[, i] = contra.fact
     save.fitted[, i] = p.fn(model, X)
   }
+  
+  #####bootstrap
+  boot.list=FALSE
+  if(boot.cf==TRUE){
+    serie=cbind(y.fit,x.fit)
+    q=length(data)
+    bootfunc=function(serie){
+      y.fit=serie[,1:q]
+      x.fit=serie[,-c(1:q)]
+      if(is.vector(y.fit)){
+        y.fit=matrix(y.fit,ncol=1)
+      }
+      save.cf.boot = matrix(NA, nrow(x.pred), q)
+      for (i in 1:q) {
+        model.boot = fn(x.fit, y.fit[, i])
+        contra.fact.boot = p.fn(model.boot, x.pred)
+        save.cf.boot[, i] = contra.fact.boot
+      }
+      return(as.vector(save.cf.boot))
+      #return(coef(model.boot))
+    }
+    boot.cf=tsboot(serie,bootfunc,R=R,l=3,sim="fixed")
+    boot.stat=boot.cf$t
+    boot.list=list()
+    for(i in 1:nrow(boot.stat)){
+      boot.list[[i]]=matrix(boot.stat[i,],ncol=q)
+    }
+  }
+  
+  #####delta statistic
   delta.aux = tail(Y.raw, nrow(save.cf)) - save.cf
   delta = colMeans(delta.aux)
   aux = matrix(0, nrow(X), length(data))
@@ -168,8 +203,8 @@ fitArCo=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL, HACwe
   rownames(delta.stat) = names(data)
   save.fitted=head(save.fitted,nrow(save.fitted)-nrow(save.cf))
   
-  result=list(cf = save.cf, fitted=save.fitted, model = model.list, delta = delta.stat,p.value=p.value , data=data, t0=t0, treated.unity=treated.unity)
+  result=list(cf = save.cf, fitted=save.fitted, model = model.list, delta = delta.stat,p.value=p.value , data=data, t0=t0, treated.unity=treated.unity, boot.cf=boot.list)
   class(result)="fitArCo"
   return(result)
 }
-  
+

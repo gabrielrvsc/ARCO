@@ -27,13 +27,21 @@
 #' ArCo=fitArCo(data = data,fn = fn, p.fn = p.fn, treated.unity = 1 , t0 = 51)
 #' plot(ArCo)
 
-plot.fitArCo=function(x,ylab=NULL,main=NULL,plot=NULL,ncol=1,display.fitted=FALSE,y.min=NULL,y.max=NULL,...){
+plot.fitArCo=function(x,ylab=NULL,main=NULL,plot=NULL,ncol=1,display.fitted=FALSE,y.min=NULL,y.max=NULL,confidence.bands=FALSE,alpha=0.05,...){
 
   t0=x$t0
   data=x$data
   fitted=x$fitted
   treated.unity=x$treated.unity
   cf=x$cf
+  boot.cf=x$boot.cf
+  
+  if(typeof(boot.cf)!="list"){
+    if(confidence.bands==TRUE){
+      confidence.bands=FALSE
+      cat("Confidence bands set to FALSE: The model has no confidence bands. Set boot.cf to TRUE on the ArCo estimation.")
+    }
+  }
   
   if (length(data) == 1) {
     Y = matrix(data[[1]][, treated.unity], ncol = 1)
@@ -76,8 +84,20 @@ plot.fitArCo=function(x,ylab=NULL,main=NULL,plot=NULL,ncol=1,display.fitted=FALS
     par(mfrow = c(ceiling(length(data)/ncol), ncol))
     for (i in 1:ncol(Y)) {
       graphics::plot(Y[, i], type = "l", ylab = ylab[i], xlab = "Time",main=main[i],ylim=c(y.min[i],y.max[i]),...)
+      
+      if(confidence.bands==TRUE){
+        aux=Reduce("cbind",lapply(boot.cf,function(x)x[,i]))
+        aux1=t(apply(aux,1,sort))
+        intervals=c(round(ncol(aux)*(alpha/2)),round(ncol(aux)*(1-alpha/2)))
+        xcord=t0:length(Y[,i])
+        ycord1=aux1[,intervals[1]]
+        ycord2=aux1[,intervals[2]]
+        graphics::polygon(c(rev(xcord),xcord),c(rev(ycord1),ycord2),col='gray60',border = NA)
+        graphics::lines(Y[, i])
+      }
       graphics::lines(c(rep(NA, t0 - 2), Y[t0 - 1, i], cf[, i]), col = "blue")
       graphics::abline(v = t0, col = "blue", lty = 2)
+      
       if(display.fitted==TRUE){
         graphics::lines(fitted[,i],col="red")
         graphics::legend("topleft",legend = c("Observed","Fitted","Counter Fact."),col=c(1,2,4),
@@ -88,8 +108,21 @@ plot.fitArCo=function(x,ylab=NULL,main=NULL,plot=NULL,ncol=1,display.fitted=FALS
     par(mfrow = c(ceiling(length(plot)/ncol), ncol))  
     for(i in 1:length(plot)){
       graphics::plot(Y[, plot[i]], type = "l", ylab = ylab[i], xlab = "Time",main=main[i],ylim=c(y.min[i],y.max[i]),...)
+      
+      if(confidence.bands==TRUE){
+        aux=Reduce("cbind",lapply(boot.cf,function(x)x[,plot[i]]))
+        aux1=t(apply(aux,1,sort))
+        intervals=c(round(ncol(aux)*(alpha/2)),round(ncol(aux)*(1-alpha/2)))
+        xcord=t0:length(Y[,plot[i]])
+        ycord1=aux1[,intervals[1]]
+        ycord2=aux1[,intervals[2]]
+        graphics::polygon(c(rev(xcord),xcord),c(rev(ycord1),ycord2),col='gray60',border = NA)
+        graphics::lines(Y[, plot[i]])
+      }
+      
       graphics::lines(c(rep(NA, t0 - 2), Y[t0 - 1, plot[i]], cf[, plot[i]]), col = "blue")
       graphics::abline(v = t0, col = "blue", lty = 2)
+      
       if(display.fitted==TRUE){
         graphics::lines(fitted[,plot[i]],col="red")
         graphics::legend("topleft",legend = c("Observed","Fitted","Counter Fact."),col=c(1,2,4),

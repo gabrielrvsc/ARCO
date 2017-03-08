@@ -1,9 +1,10 @@
 #' Estimates intervention time on a given treated unity
 #' 
-#'   This description may be useful to clarify the notation and understand how the arguments must be supplied to the functions. 
-#' * units: Each unity is indexed by a number between 1,...,n. They are for exemple: countries, states, municipalities, firms, etc. 
-#' * Variables:  For each unity and for every time period t=1,...,T we observe q_i >= 1 variables. They are for example: GDP, inflation, sales, etc.
+#' This description may be useful to clarify the notation and understand how the arguments must be supplied to the functions. \cr \cr
+#' * units: Each unity is indexed by a number between 1,...,n. They are for exemple: countries, states, municipalities, firms, etc. \cr \cr 
+#' * Variables:  For each unity and for every time period t=1,...,T we observe q_i >= 1 variables. They are for example: GDP, inflation, sales, etc.\cr \cr
 #' * Intervention:  The intervention took place only in the treated unity at time t0=L0*T, where L0 is in (0,1).
+#' 
 #' @inheritParams fitArCo
 #' @param start Initial value of L0 to be tested.
 #' @param end Final value of L0 to be tested.
