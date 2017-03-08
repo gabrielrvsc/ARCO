@@ -70,6 +70,7 @@ data(data.q2) # data is already a list
 
 ## == Fitting the ArCo using the package glmnet == ##
 ## == Bartlett kernel weights for two lags == ##
+
 require(glmnet)
 l=2
 w <- seq(1, 0, by = -(1/(l + 1)))[1:(l+1)]

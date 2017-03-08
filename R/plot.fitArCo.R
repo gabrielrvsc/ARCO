@@ -83,7 +83,7 @@ plot.fitArCo=function(x,ylab=NULL,main=NULL,plot=NULL,ncol=1,display.fitted=FALS
   
   
   if(is.null(plot)){
-    par(mfrow = c(ceiling(length(data)/ncol), ncol))
+    graphics::par(mfrow = c(ceiling(length(data)/ncol), ncol))
     for (i in 1:ncol(Y)) {
       graphics::plot(Y[, i], type = "l", ylab = ylab[i], xlab = "Time",main=main[i],ylim=c(y.min[i],y.max[i]),...)
       
@@ -107,7 +107,7 @@ plot.fitArCo=function(x,ylab=NULL,main=NULL,plot=NULL,ncol=1,display.fitted=FALS
       }
     }
   }else{
-    par(mfrow = c(ceiling(length(plot)/ncol), ncol))  
+    graphics::par(mfrow = c(ceiling(length(plot)/ncol), ncol))  
     for(i in 1:length(plot)){
       graphics::plot(Y[, plot[i]], type = "l", ylab = ylab[i], xlab = "Time",main=main[i],ylim=c(y.min[i],y.max[i]),...)
       

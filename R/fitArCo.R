@@ -19,8 +19,7 @@
 #' @param l Block length for the block bootstrap.  
 #' @keywords ArCo
 #' @export
-#' @import Matrix glmnet randomForest
-#' @importFrom graphics abline lines par plot
+#' @import Matrix glmnet
 #' @importFrom stats cov embed qnorm
 #' @examples 
 #' #############################
@@ -54,6 +53,7 @@
 #' 
 #' ## == Fitting the ArCo using the package glmnet == ##
 #' ## == Bartlett kernel weights for two lags == ##
+#' 
 #' require(glmnet)
 #' l=2
 #' w <- seq(1, 0, by = -(1/(l + 1)))[1:(l+1)]
@@ -152,6 +152,7 @@ fitArCo=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL, HACwe
         save.cf.boot[, i] = contra.fact.boot
       }
       return(as.vector(save.cf.boot))
+      #return(coef(model.boot))
     }
     boot.cf=boot::tsboot(serie,bootfunc,R=R,l=3,sim="fixed")
     boot.stat=boot.cf$t

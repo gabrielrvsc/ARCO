@@ -9,7 +9,7 @@
 #' @param start Initial value of L0 to be tested.
 #' @param end Final value of L0 to be tested.
 #' @export
-#' @import Matrix glmnet randomForest
+#' @import Matrix glmnet
 #' @examples 
 #' #############################
 #' ## === Example for q=1 === ##
