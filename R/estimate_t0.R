@@ -1,15 +1,23 @@
-#' Estimates intervention time on a given treated unity
+#' Estimates the intervention time on a given treated unity
 #' 
-#' This description may be useful to clarify the notation and understand how the arguments must be supplied to the functions. \cr \cr
-#' * units: Each unity is indexed by a number between 1,...,n. They are for exemple: countries, states, municipalities, firms, etc. \cr \cr 
-#' * Variables:  For each unity and for every time period t=1,...,T we observe q_i >= 1 variables. They are for example: GDP, inflation, sales, etc.\cr \cr
-#' * Intervention:  The intervention took place only in the treated unity at time t0=L0*T, where L0 is in (0,1).
+#' Estimates the intervention time on a given treated unity based on any model supplied by the user.
+#' 
+#' @details This description may be useful to clarify the notation and understand how the arguments must be supplied to the functions.
+#' \itemize{
+#' \item{units: }{Each unity is indexed by a number between 1,...,n. They are for exemple: countries, states, municipalities, firms, etc.}
+#' \item{Variables: }{For each unity and for every time period t=1,...,T we observe q_i >= 1 variables. They are for example: GDP, inflation, sales, etc.}
+#' \item{Intervention: }{The intervention took place only in the treated unity at time t0=L0*T, where L0 is in (0,1).}
+#' }
 #' 
 #' @inheritParams fitArCo
 #' @param start Initial value of L0 to be tested.
 #' @param end Final value of L0 to be tested.
 #' @export
 #' @import Matrix glmnet
+#' @return A list with the following items:
+#' \item{t0}{Estimated t0.}
+#' \item{delta.norm}{The norm of the delta corresponding to t0.}
+#' \item{call}{The matched call.}
 #' @examples 
 #' #############################
 #' ## === Example for q=1 === ##
@@ -77,5 +85,5 @@ estimate_t0=function (data, fn, p.fn, start = 0.3, end = 0.95, treated.unity = 1
   delta.norm = sqrt(rowSums((save.delta)^2))
   t0 = which(delta.norm == max(delta.norm))
   delta = delta.norm[t0]
-  return(c(to = t0, delta.norm = delta))
+  return(c(t0 = t0, delta.norm = delta,call=match.call()))
 }

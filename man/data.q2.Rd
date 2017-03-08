@@ -4,11 +4,11 @@
 \name{data.q2}
 \alias{data.q2}
 \title{A dataset used in the examples}
-\format{A list with 2 matrixes of 100 rows and 20 variables}
+\format{A list with 2 matrixes of 100 rows and 6 variables}
 \usage{
 data(data.q2)
 }
 \description{
-A dataset used in the examples
+This data is a list with two matrixes, each have 100 observations and 6 variables. In the ArCo context each matrix is a variable and each variable in the matrixes is an unity. The intervention took place on the first unity at t0=51 by adding a constant of 15 and -10 on variables (matrixes) 1 and 2.
 }
 \keyword{datasets}

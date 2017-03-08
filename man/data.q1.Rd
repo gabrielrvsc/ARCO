@@ -3,12 +3,12 @@
 \docType{data}
 \name{data.q1}
 \alias{data.q1}
-\title{A dataset used in the examples}
+\title{A generated dataset used in the examples}
 \format{A matrix with 100 rows and 20 variables}
 \usage{
 data(data.q1)
 }
 \description{
-A dataset used in the examples
+This data contains 100 observations of 20 variables. Each variable is one ArCo unity. The intervention took place on the first unity at t0=51 by adding a constant equal to 3.
 }
 \keyword{datasets}

@@ -38,6 +38,14 @@ plot.fitArCo=function(x,ylab=NULL,main=NULL,plot=NULL,ncol=1,display.fitted=FALS
   cf=x$cf
   boot.cf=x$boot.cf
   
+  if(typeof(boot.cf)=="list"){
+    NAboot=Reduce(sum,boot.cf)
+    if(is.na(NAboot)){
+      warning("NA values on the bootstrap counterfactual: unable to plot confidence bands.")
+      confidence.bands=FALSE
+    }
+  }
+  
   if(typeof(boot.cf)!="list"){
     if(confidence.bands==TRUE){
       confidence.bands=FALSE

@@ -26,17 +26,34 @@ fitArCo(data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL,
 
 \item{alpha}{Significance level for the delta.}
 
-\item{boot.cf}{Should bootstrap confidence intervals for the counter factual be calculated (default=FALSE).}
+\item{boot.cf}{Should bootstrap confidence intervals for the counterfactual be calculated (default=FALSE).}
 
 \item{R}{Number of bootstrap replications in case boot.cf=TRUE.}
 
 \item{l}{Block length for the block bootstrap.}
 }
+\value{
+An object with S3 class fitArCo.
+\item{cf}{estimated counterfactual}
+\item{fitted}{In sample fitted values for the pre-treatment period.}
+\item{model}{A list with q estimated models, one for each variable. Each element in the list is the output of the fn function.}
+\item{delta}{The delta statistics and its confidence interval.}
+\item{data}{The data used.}
+\item{t0}{The intervention period used.}
+\item{treated.unity}{The treated unity used.}
+\item{boot.cf}{A list with the bootstrap result (boot.cf=TRUE) or logical FALSE (boot.cf=FALSE). In the first case, each element in the list refeers to one bootstrap replication of the counterfactual, i. e. the list length is R.}
+\item{call}{The matched call.}
+}
 \description{
-This description may be useful to clarify the notation and understand how the arguments must be supplied to the functions. \cr \cr
-* units: Each unity is indexed by a number between 1,...,n. They are for exemple: countries, states, municipalities, firms, etc. \cr \cr 
-* Variables:  For each unity and for every time period t=1,...,T we observe q_i >= 1 variables. They are for example: GDP, inflation, sales, etc.\cr \cr
-* Intervention:  The intervention took place only in the treated unity at time t0=L0*T, where L0 is in (0,1).
+Estimates the Artificial Counterfactual unsing any model supplied by the user, calculates the most relevant statistics and allows for the counterfactual confidence intervals to be estimated by block bootstrap.
+}
+\details{
+This description may be useful to clarify the notation and understand how the arguments must be supplied to the functions.
+\itemize{
+\item{units: }{Each unity is indexed by a number between 1,...,n. They are for exemple: countries, states, municipalities, firms, etc.}
+\item{Variables: }{For each unity and for every time period t=1,...,T we observe q_i >= 1 variables. They are for example: GDP, inflation, sales, etc.}
+\item{Intervention: }{The intervention took place only in the treated unity at time t0=L0*T, where L0 is in (0,1).}
+}
 }
 \examples{
 #############################
