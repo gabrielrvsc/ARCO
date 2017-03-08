@@ -9,6 +9,8 @@
 #' @param y.min n dimensional numeric vector defining the lower bound for the y axis.
 #' @param y.max n dimensional numeric vector defining the upper bound for the y axis.
 #' @param ... Other graphical parameters to plot.  
+#' @param confidence.bands Set to TRUE to plot the counter factual confidence bands (default=FALSE). If the ArCo was estimated without bootstrap this argument will be forced to FALSE.
+#' @param alpha Significance level for the confidence bands. 
 #' @export
 #' @examples 
 #' ##############################################

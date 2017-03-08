@@ -14,7 +14,8 @@
 #' #############################
 #' ## === Example for q=1 === ##
 #' #############################
-#' data(data.q1) # = First unity was treated on t=51 by adding a constant equal 3
+#' data(data.q1) 
+#' # = First unity was treated on t=51 by adding a constant equal 3
 #' 
 #' data=list(data.q1) # = Even if q=1 the data must be in a list
 #' 
@@ -36,13 +37,13 @@
 #' ## === Example for q=2 === ##
 #' #############################
 #' 
-#' # = First unity was treated on t=51 by adding constants 3 and -3 for the first and second variables
+#' # = First unity was treated on t=51 by adding constants 15 and -10 
+#' # for the first and second variables
 #' data(data.q2) # data is already a list
 #' 
-# ##' == Detecting lambda0 using the package glmnet via LASSO and crossvalidation == ##
-#' require(glmnet)
+#' ## == Detecting lambda0 using the package glmnet via LASSO and crossvalidation == ##
 #' 
-#' t0b=estimate_t0(data = data.q2,fn = cv.glmnet, p.fn = predict, treated.unity = 1, start=0.4)
+#' t0b=estimate_t0(data = data.q2,fn = fn, p.fn = p.fn, treated.unity = 1, start=0.4)
 
 
 

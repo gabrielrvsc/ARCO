@@ -14,6 +14,9 @@
 #' @param Xreg Exogenous controls.
 #' @param HACweights Vector of weights for the robust covariance matrix of the delta statistics. Default is 1 for the lag 0 and 0 for all other lags.
 #' @param alpha Significance level for the delta.
+#' @param boot.cf Should bootstrap confidence intervals for the counter factual be calculated (default=FALSE). 
+#' @param R Number of bootstrap replications in case boot.cf=TRUE.
+#' @param l Block length for the block bootstrap.  
 #' @keywords ArCo
 #' @export
 #' @import Matrix glmnet randomForest
@@ -23,8 +26,11 @@
 #' #############################
 #' ## === Example for q=1 === ##
 #' #############################
-#' data(data.q1) # = First unity was treated on t=51 by adding a constant equal 3
+#' data(data.q1)
+#' # = First unity was treated on t=51 by adding a constant equal 3
+#' 
 #' data=list(data.q1) # = Even if q=1 the data must be in a list
+#' 
 #' ## == Fitting the ArCo using linear regression == ##
 #' # = creating fn and p.fn function = #
 #' fn=function(X,y){
@@ -32,33 +38,33 @@
 #' }
 #' p.fn=function(model,newdata){
 #' b=coef(model)
-#' return(cbind(1,newdata) %*% b)}
+#' return(cbind(1,newdata) %*% b)
+#' }
+#' 
 #' ArCo=fitArCo(data = data,fn = fn, p.fn = p.fn, treated.unity = 1 , t0 = 51)
 #' 
 #' #############################
 #' ## === Example for q=2 === ##
 #' #############################
 #' 
-#' # = First unity was treated on t=51 by adding constants 3 and -3 for the first and second variables
+#' # = First unity was treated on t=51 by adding constants 15 and -10 
+#' # for the first and second variables
+#' 
 #' data(data.q2) # data is already a list
-#' ## == Fitting the ArCo using the package randomForest == ##
-#' require(randomForest)
+#' 
+#' ## == Fitting the ArCo using the package glmnet == ##
 #' ## == Bartlett kernel weights for two lags == ##
+#' require(glmnet)
 #' l=2
 #' w <- seq(1, 0, by = -(1/(l + 1)))[1:(l+1)]
-#' ArCo2=fitArCo(data = data.q2,fn = randomForest, p.fn = predict,
-#' treated.unity = 1 , t0 = 51, HACweights = w)
-#' ## == Fitting the ArCo using the package glmnet via LASSO and crossvalidation == ##
-#' require(glmnet)
-#' ## == Bartlett kernel weights for two lags == ##
-#' ArCo3=fitArCo(data = data.q2,fn = cv.glmnet, p.fn = predict, 
-#' treated.unity = 1 , t0 = 51, HACweights = w)
+#' ArCo2=fitArCo(data = data.q2,fn = cv.glmnet, p.fn = predict,
+#' treated.unity = 1 , t0 = 51, HACweights = w, lag=2)
 #'
 #' @references Carvalho, C., Masini, R., Medeiros, M. (2016) "ArCo: An Artificial Counterfactual Approach For High-Dimensional Panel Time-Series Data.".
 
 
 
-fitArCo=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL, HACweights = 1, alpha = 0.05,boot.cf=FALSE,l=3,R=100) 
+fitArCo=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL, HACweights = 1, alpha = 0.05,boot.cf=FALSE,R=100,l=3) 
 {
   if(boot.cf==TRUE){
     if(R<10){
@@ -146,9 +152,8 @@ fitArCo=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL, HACwe
         save.cf.boot[, i] = contra.fact.boot
       }
       return(as.vector(save.cf.boot))
-      #return(coef(model.boot))
     }
-    boot.cf=tsboot(serie,bootfunc,R=R,l=3,sim="fixed")
+    boot.cf=boot::tsboot(serie,bootfunc,R=R,l=3,sim="fixed")
     boot.stat=boot.cf$t
     boot.list=list()
     for(i in 1:nrow(boot.stat)){

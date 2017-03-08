@@ -5,7 +5,7 @@
 \title{Estimates the ArCo using the model selected by the user}
 \usage{
 fitArCo(data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL,
-  HACweights = 1, alpha = 0.05, boot.cf = FALSE, l = 3, R = 100)
+  HACweights = 1, alpha = 0.05, boot.cf = FALSE, R = 100, l = 3)
 }
 \arguments{
 \item{data}{A list of matrixes or dataframes of length q. Each matrix is T X n and it contains observations of a single variable for all units and all periods of time. Even in the case of a single variable (q=1), the matrix must be inside a list.}
@@ -25,6 +25,12 @@ fitArCo(data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL,
 \item{HACweights}{Vector of weights for the robust covariance matrix of the delta statistics. Default is 1 for the lag 0 and 0 for all other lags.}
 
 \item{alpha}{Significance level for the delta.}
+
+\item{boot.cf}{Should bootstrap confidence intervals for the counter factual be calculated (default=FALSE).}
+
+\item{R}{Number of bootstrap replications in case boot.cf=TRUE.}
+
+\item{l}{Block length for the block bootstrap.}
 }
 \description{
 This description may be useful to clarify the notation and understand how the arguments must be supplied to the functions. \cr \cr
@@ -36,8 +42,11 @@ This description may be useful to clarify the notation and understand how the ar
 #############################
 ## === Example for q=1 === ##
 #############################
-data(data.q1) # = First unity was treated on t=51 by adding a constant equal 3
+data(data.q1)
+# = First unity was treated on t=51 by adding a constant equal 3
+
 data=list(data.q1) # = Even if q=1 the data must be in a list
+
 ## == Fitting the ArCo using linear regression == ##
 # = creating fn and p.fn function = #
 fn=function(X,y){
@@ -45,27 +54,27 @@ return(lm(y~X))
 }
 p.fn=function(model,newdata){
 b=coef(model)
-return(cbind(1,newdata) \%*\% b)}
+return(cbind(1,newdata) \%*\% b)
+}
+
 ArCo=fitArCo(data = data,fn = fn, p.fn = p.fn, treated.unity = 1 , t0 = 51)
 
 #############################
 ## === Example for q=2 === ##
 #############################
 
-# = First unity was treated on t=51 by adding constants 3 and -3 for the first and second variables
+# = First unity was treated on t=51 by adding constants 15 and -10 
+# for the first and second variables
+
 data(data.q2) # data is already a list
-## == Fitting the ArCo using the package randomForest == ##
-require(randomForest)
+
+## == Fitting the ArCo using the package glmnet == ##
 ## == Bartlett kernel weights for two lags == ##
+require(glmnet)
 l=2
 w <- seq(1, 0, by = -(1/(l + 1)))[1:(l+1)]
-ArCo2=fitArCo(data = data.q2,fn = randomForest, p.fn = predict,
-treated.unity = 1 , t0 = 51, HACweights = w)
-## == Fitting the ArCo using the package glmnet via LASSO and crossvalidation == ##
-require(glmnet)
-## == Bartlett kernel weights for two lags == ##
-ArCo3=fitArCo(data = data.q2,fn = cv.glmnet, p.fn = predict, 
-treated.unity = 1 , t0 = 51, HACweights = w)
+ArCo2=fitArCo(data = data.q2,fn = cv.glmnet, p.fn = predict,
+treated.unity = 1 , t0 = 51, HACweights = w, lag=2)
 
 }
 \references{
