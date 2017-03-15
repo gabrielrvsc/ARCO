@@ -1,4 +1,4 @@
-#' Plots realized values and the counter factual estimated by the fitArCo function
+#' Plots realized values and the counterfactual estimated by the fitArCo function
 #' 
 #' @param x An ArCo object estimated using the fitArCo function.
 #' @param ylab n dimensional character vector, where n is the length of the plot argument.

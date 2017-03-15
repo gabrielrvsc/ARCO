@@ -55,7 +55,7 @@
 
 
 
-estimate_t0=function (data, fn, p.fn, start = 0.3, end = 0.95, treated.unity = 1, 
+estimate_t0=function (data, fn, p.fn, start = 0.4, end = 0.9, treated.unity = 1, 
           lag = 0, Xreg = NULL) 
 {
   for (i in 1:length(data)) {

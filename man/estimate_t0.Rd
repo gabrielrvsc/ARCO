@@ -4,7 +4,7 @@
 \alias{estimate_t0}
 \title{Estimates the intervention time on a given treated unity}
 \usage{
-estimate_t0(data, fn, p.fn, start = 0.3, end = 0.95, treated.unity = 1,
+estimate_t0(data, fn, p.fn, start = 0.4, end = 0.9, treated.unity = 1,
   lag = 0, Xreg = NULL)
 }
 \arguments{

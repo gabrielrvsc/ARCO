@@ -16,11 +16,16 @@
 #' @param t0 Single number indicating the intervention period.
 #' @param lag Number of lags in the first stage model. Default is 0, i.e. only contemporaneous variables are used.
 #' @param Xreg Exogenous controls.
-#' @param HACweights Vector of weights for the robust covariance matrix of the delta statistics. Default is 1 for the lag 0 and 0 for all other lags.
 #' @param alpha Significance level for the delta.
 #' @param boot.cf Should bootstrap confidence intervals for the counterfactual be calculated (default=FALSE). 
 #' @param R Number of bootstrap replications in case boot.cf=TRUE.
 #' @param l Block length for the block bootstrap.  
+#' @param VCOV.type Type of covariance matrix for the delta. "iid" for standard covariance matrix, "var" or "varhac" to use prewhitened covariance matrix using VAR models, "varhac" selects the order of the VAR automaticaly and "nw" for Newey West. In the last case the user may select the kernel type and combine the kernel with the VAR prewhitening. For more details see Andrews and Monahan (1992).
+#' @param VCOV.lag Lag used on the robust covariance matrix if VCOV.type is different from "iid".
+#' @param bandwidth.kernel Kernel bandwidth. If NULL the bandwidth is automatically calculated.
+#' @param kernel.type Kernel to be used for VCOV.type="nw".
+#' @param VHAC.max.lag Maximum lag of the VAR in case VCOV.type="varhac".  
+#' @param prewhitening.kernel If TRUE and VCOV.type="nw", the covariance matrix is calculated with prewhitening (default=FALSE).
 #' @return An object with S3 class fitArCo.
 #' \item{cf}{estimated counterfactual}
 #' \item{fitted}{In sample fitted values for the pre-treatment period.}
@@ -66,26 +71,29 @@
 #' data(data.q2) # data is already a list
 #' 
 #' ## == Fitting the ArCo using the package glmnet == ##
-#' ## == Bartlett kernel weights for two lags == ##
+#' ## == Quadratic Spectral kernel weights for two lags == ##
 #' 
+#' ## == Fitting the ArCo using the package glmnet == ##
+#' ## == Bartlett kernel weights for two lags == ##
 #' require(glmnet)
-#' l=2
-#' w <- seq(1, 0, by = -(1/(l + 1)))[1:(l+1)]
-#' ArCo2=fitArCo(data = data.q2,fn = cv.glmnet, p.fn = predict,
-#' treated.unity = 1 , t0 = 51, HACweights = w, lag=2)
+#' set.seed(123)
+#' ArCo2=fitArCo(data = data.q2,fn = cv.glmnet, p.fn = predict,treated.unity = 1 , t0 = 51, 
+#'              VCOV.type = "nw",kernel.type = "QuadraticSpectral",VCOV.lag = 2)
 #'
 #' @references Carvalho, C., Masini, R., Medeiros, M. (2016) "ArCo: An Artificial Counterfactual Approach For High-Dimensional Panel Time-Series Data.".
+#' 
+#' Andrews, D. W., & Monahan, J. C. (1992). An improved heteroskedasticity and autocorrelation consistent covariance matrix estimator. Econometrica: Journal of the Econometric Society, 953-966.
 
 
-
-fitArCo=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL, HACweights = 1, alpha = 0.05,boot.cf=FALSE,R=100,l=3) 
+fitArCo=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL, alpha = 0.05, boot.cf = FALSE, R = 100, l = 3,VCOV.type=c("iid","var","nw","varhac"),VCOV.lag=1,bandwidth.kernel=NULL,kernel.type=c("QuadraticSpectral","Truncated","Bartlett","Parzen","TukeyHanning"),VHAC.max.lag=5,prewhitening.kernel=FALSE) 
 {
-  if(boot.cf==TRUE){
-    if(R<10){
+  VCOV.type=match.arg(VCOV.type)
+  kernel.type=match.arg(kernel.type)
+  if (boot.cf == TRUE) {
+    if (R < 10) {
       stop("Minimum number of bootstrap samples is 10.")
     }
   }
-  
   if (is.null(names(data))) {
     names(data) = paste("Variable", 1:length(data), sep = "")
   }
@@ -95,7 +103,6 @@ fitArCo=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL, HACwe
                                   sep = "")
     }
   }
-  ###possible problems in colnames
   for (i in 1:length(data)) {
     aux = length(unique(colnames(data[[i]])))
     k = ncol(data[[i]])
@@ -115,14 +122,15 @@ fitArCo=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL, HACwe
     X = Reduce("cbind", lapply(data, function(x) x[, -treated.unity]))
     aux = list()
     for (i in 1:length(data)) {
-      aux[[i]] = paste(names(data)[i],colnames(data[[i]])[-treated.unity],sep=".")
+      aux[[i]] = paste(names(data)[i], colnames(data[[i]])[-treated.unity], 
+                       sep = ".")
     }
     colnames(X) = unlist(aux)
   }
   Y.raw = Y
   if (lag != 0) {
     aux1 = sort(rep(0:lag, ncol(X)))
-    aux = paste(rep(colnames(X), lag+1), "lag", aux1, sep = ".")
+    aux = paste(rep(colnames(X), lag + 1), "lag", aux1, sep = ".")
     X = embed(X, lag + 1)
     colnames(X) = aux
     Y = tail(Y, nrow(X))
@@ -133,6 +141,7 @@ fitArCo=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL, HACwe
   if (is.vector(Y)) {
     Y = matrix(Y, length(Y), 1)
   }
+  T=nrow(X)
   y.fit = matrix(Y[1:(t0 - 1 - lag), ], ncol = length(data))
   y.pred = matrix(Y[-c(1:(t0 - 1 - lag)), ], ncol = length(data))
   x.fit = X[1:(t0 - 1 - lag), ]
@@ -147,17 +156,15 @@ fitArCo=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL, HACwe
     save.cf[, i] = contra.fact
     save.fitted[, i] = p.fn(model, X)
   }
-  
-  #####bootstrap
-  boot.list=FALSE
-  if(boot.cf==TRUE){
-    serie=cbind(y.fit,x.fit)
-    q=length(data)
-    bootfunc=function(serie){
-      y.fit=serie[,1:q]
-      x.fit=serie[,-c(1:q)]
-      if(is.vector(y.fit)){
-        y.fit=matrix(y.fit,ncol=1)
+  boot.list = FALSE
+  if (boot.cf == TRUE) {
+    serie = cbind(y.fit, x.fit)
+    q = length(data)
+    bootfunc = function(serie) {
+      y.fit = serie[, 1:q]
+      x.fit = serie[, -c(1:q)]
+      if (is.vector(y.fit)) {
+        y.fit = matrix(y.fit, ncol = 1)
       }
       save.cf.boot = matrix(NA, nrow(x.pred), q)
       for (i in 1:q) {
@@ -166,75 +173,56 @@ fitArCo=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL, HACwe
         save.cf.boot[, i] = contra.fact.boot
       }
       return(as.vector(save.cf.boot))
-      #return(coef(model.boot))
     }
-    boot.cf=boot::tsboot(serie,bootfunc,R=R,l=3,sim="fixed")
-    boot.stat=boot.cf$t
-    boot.list=list()
-    for(i in 1:nrow(boot.stat)){
-      boot.list[[i]]=matrix(boot.stat[i,],ncol=q)
+    boot.cf = boot::tsboot(serie, bootfunc, R = R, l = 3, 
+                           sim = "fixed")
+    boot.stat = boot.cf$t
+    boot.list = list()
+    for (i in 1:nrow(boot.stat)) {
+      boot.list[[i]] = matrix(boot.stat[i, ], ncol = q)
     }
   }
-  
-  #####delta statistic
   delta.aux = tail(Y.raw, nrow(save.cf)) - save.cf
   delta = colMeans(delta.aux)
-  aux = matrix(0, nrow(X), length(data))
+  aux = matrix(0, T, length(data))
   aux[(t0 - lag):nrow(aux), ] = 1
   vhat = Y - (save.fitted + t(t(aux) * delta))
   v1 = matrix(vhat[1:(t0 - lag - 1), ], ncol = length(data))
   v2 = matrix(vhat[(t0 - lag):nrow(vhat), ], ncol = length(data))
-  tau01 = cov(v1) * HACweights[1]
-  tau02 = cov(v2) * HACweights[1]
-  tauk1bart = 0
-  tauk2bart = 0
-  M = length(HACweights) - 1
-  if (M >= nrow(v2)) {
-    stop("HAC lags bigger than treatment.")
-  }
-  if (M > 0) {
-    for (k in 1:M) {
-      aux = cov(v1[(1 + k):nrow(v1), ], v1[1:(nrow(v1) - 
-                                                k), ])
-      tauk1bart = tauk1bart + (aux + t(aux)) * HACweights[k + 
-                                                            1]
-      aux = cov(v2[(1 + k):nrow(v2), ], v2[1:(nrow(v2) - 
-                                                k), ])
-      tauk2bart = tauk2bart + (aux + t(aux)) * HACweights[k + 
-                                                            1]
-    }
-  }
-  tauT1 = tau01 + tauk1bart
-  tauT2 = tau02 + tauk2bart
-  sigmahat = (tauT1/(t0 - 1) + tauT2/(nrow(X) - t0 + 1)) * 
-    nrow(X)
-  w = sqrt(diag(sigmahat))
-  W = nrow(X)*t(delta)%*%solve(sigmahat)%*%delta
-  p.value=1-stats::pchisq(W,length(delta))
-  uI = delta + (w * qnorm(1 - alpha/2))/sqrt(nrow(X))
-  lI = delta - (w * qnorm(1 - alpha/2))/sqrt(nrow(X))
-  delta.stat = cbind(LB = lI, delta = delta, UB = uI)
   
+  
+  sigmahat=T*switch(VCOV.type,
+                    iid = cov(v1)/max(1,(t0-1-k)) + cov(v2)/max(1,(T-t0+1-k)),
+                    var = VAR(v1,VCOV.lag)$LR/max(1,(t0-1-k)) + VAR(v2,VCOV.lag)$LR/max(1,(T-t0+1-k)),
+                    nw  = neweywest(v1,NULL,kernel.type,prewhitening.kernel,VCOV.lag)/max(1,(t0-1-k)) + neweywest(v2,NULL,kernel.type,prewhitening.kernel,VCOV.lag)/max(1,(T-t0+1-k)),
+                    varhac = VARHAC(v1,VHAC.max.lag)/max(1,(t0-1-k)) + VARHAC(v2,VHAC.max.lag)/max(1,(T-t0+1-k))
+  )
+  
+  
+  
+  w = sqrt(diag(sigmahat))
+  W = T * t(delta) %*% solve(sigmahat) %*% delta
+  p.value = 1 - stats::pchisq(W, length(delta))
+  
+  uI = delta + (w * qnorm(1 - alpha/2))/sqrt(T)
+  lI = delta - (w * qnorm(1 - alpha/2))/sqrt(T)
+  delta.stat = cbind(LB = lI, delta = delta, UB = uI)
   names(model.list) = names(data)
   colnames(save.cf) = names(data)
   rownames(save.cf) = tail(rownames(Y.raw), nrow(save.cf))
   colnames(save.fitted) = names(data)
   rownames(save.fitted) = head(rownames(Y), nrow(save.fitted))
   rownames(delta.stat) = names(data)
-  save.fitted=head(save.fitted,nrow(save.fitted)-nrow(save.cf))
-  
-  ### some warnings
-  if(typeof(boot.list)=="list"){
-    NAboot=Reduce(sum,boot.list)
-    if(is.na(NAboot)){
-      warning("Some of the boostrap counterfactuals may have returned NA values. \n 
-              A possible cause is the number of observations being close the number of variables if the lm function was used.")
+  save.fitted = head(save.fitted, nrow(save.fitted) - nrow(save.cf))
+  if (typeof(boot.list) == "list") {
+    NAboot = Reduce(sum, boot.list)
+    if (is.na(NAboot)) {
+      warning("Some of the boostrap counterfactuals may have returned NA values. \n \n              A possible cause is the number of observations being close the number of variables if the lm function was used.")
     }
   }
-  
-  
-  result=list(cf = save.cf, fitted=save.fitted, model = model.list, delta = delta.stat,p.value=p.value , data=data, t0=t0, treated.unity=treated.unity, boot.cf=boot.list,call=match.call())
-  class(result)="fitArCo"
+  result = list(cf = save.cf, fitted = save.fitted, model = model.list, 
+                delta = delta.stat, p.value = p.value, data = data, t0 = t0, 
+                treated.unity = treated.unity, boot.cf = boot.list, call = match.call())
+  class(result) = "fitArCo"
   return(result)
 }
-

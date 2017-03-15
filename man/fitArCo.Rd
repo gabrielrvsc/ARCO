@@ -5,7 +5,10 @@
 \title{Estimates the ArCo using the model selected by the user}
 \usage{
 fitArCo(data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL,
-  HACweights = 1, alpha = 0.05, boot.cf = FALSE, R = 100, l = 3)
+  alpha = 0.05, boot.cf = FALSE, R = 100, l = 3, VCOV.type = c("iid",
+  "var", "nw", "varhac"), VCOV.lag = 1, bandwidth.kernel = NULL,
+  kernel.type = c("QuadraticSpectral", "Truncated", "Bartlett", "Parzen",
+  "TukeyHanning"), VHAC.max.lag = 5, prewhitening.kernel = FALSE)
 }
 \arguments{
 \item{data}{A list of matrixes or dataframes of length q. Each matrix is T X n and it contains observations of a single variable for all units and all periods of time. Even in the case of a single variable (q=1), the matrix must be inside a list.}
@@ -22,8 +25,6 @@ fitArCo(data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL,
 
 \item{Xreg}{Exogenous controls.}
 
-\item{HACweights}{Vector of weights for the robust covariance matrix of the delta statistics. Default is 1 for the lag 0 and 0 for all other lags.}
-
 \item{alpha}{Significance level for the delta.}
 
 \item{boot.cf}{Should bootstrap confidence intervals for the counterfactual be calculated (default=FALSE).}
@@ -31,6 +32,18 @@ fitArCo(data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL,
 \item{R}{Number of bootstrap replications in case boot.cf=TRUE.}
 
 \item{l}{Block length for the block bootstrap.}
+
+\item{VCOV.type}{Type of covariance matrix for the delta. "iid" for standard covariance matrix, "var" or "varhac" to use prewhitened covariance matrix using VAR models, "varhac" selects the order of the VAR automaticaly and "nw" for Newey West. In the last case the user may select the kernel type and combine the kernel with the VAR prewhitening. For more details see Andrews and Monahan (1992).}
+
+\item{VCOV.lag}{Lag used on the robust covariance matrix if VCOV.type is different from "iid".}
+
+\item{bandwidth.kernel}{Kernel bandwidth. If NULL the bandwidth is automatically calculated.}
+
+\item{kernel.type}{Kernel to be used for VCOV.type="nw".}
+
+\item{VHAC.max.lag}{Maximum lag of the VAR in case VCOV.type="varhac".}
+
+\item{prewhitening.kernel}{If TRUE and VCOV.type="nw", the covariance matrix is calculated with prewhitening (default=FALSE).}
 }
 \value{
 An object with S3 class fitArCo.
@@ -86,16 +99,19 @@ ArCo=fitArCo(data = data,fn = fn, p.fn = p.fn, treated.unity = 1 , t0 = 51)
 data(data.q2) # data is already a list
 
 ## == Fitting the ArCo using the package glmnet == ##
-## == Bartlett kernel weights for two lags == ##
+## == Quadratic Spectral kernel weights for two lags == ##
 
+## == Fitting the ArCo using the package glmnet == ##
+## == Bartlett kernel weights for two lags == ##
 require(glmnet)
-l=2
-w <- seq(1, 0, by = -(1/(l + 1)))[1:(l+1)]
-ArCo2=fitArCo(data = data.q2,fn = cv.glmnet, p.fn = predict,
-treated.unity = 1 , t0 = 51, HACweights = w, lag=2)
+set.seed(123)
+ArCo2=fitArCo(data = data.q2,fn = cv.glmnet, p.fn = predict,treated.unity = 1 , t0 = 51, 
+             VCOV.type = "nw",kernel.type = "QuadraticSpectral",VCOV.lag = 2)
 
 }
 \references{
 Carvalho, C., Masini, R., Medeiros, M. (2016) "ArCo: An Artificial Counterfactual Approach For High-Dimensional Panel Time-Series Data.".
+
+Andrews, D. W., & Monahan, J. C. (1992). An improved heteroskedasticity and autocorrelation consistent covariance matrix estimator. Econometrica: Journal of the Econometric Society, 953-966.
 }
 \keyword{ArCo}

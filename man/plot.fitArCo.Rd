@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.fitArCo.R
 \name{plot.fitArCo}
 \alias{plot.fitArCo}
-\title{Plots realized values and the counter factual estimated by the fitArCo function}
+\title{Plots realized values and the counterfactual estimated by the fitArCo function}
 \usage{
 \method{plot}{fitArCo}(x, ylab = NULL, main = NULL, plot = NULL,
   ncol = 1, display.fitted = FALSE, y.min = NULL, y.max = NULL,
@@ -32,7 +32,7 @@
 \item{...}{Other graphical parameters to plot.}
 }
 \description{
-Plots realized values and the counter factual estimated by the fitArCo function
+Plots realized values and the counterfactual estimated by the fitArCo function
 }
 \examples{
 ##############################################
