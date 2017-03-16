@@ -190,12 +190,12 @@ fitArCo=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL, alpha
   v1 = matrix(vhat[1:(t0 - lag - 1), ], ncol = length(data))
   v2 = matrix(vhat[(t0 - lag):nrow(vhat), ], ncol = length(data))
   
-  
+  t0lag=t0-lag
   sigmahat=T*switch(VCOV.type,
-                    iid = cov(v1)/max(1,(t0-1-k)) + cov(v2)/max(1,(T-t0+1-k)),
-                    var = VAR(v1,VCOV.lag)$LR/max(1,(t0-1-k)) + VAR(v2,VCOV.lag)$LR/max(1,(T-t0+1-k)),
-                    nw  = neweywest(v1,NULL,kernel.type,prewhitening.kernel,VCOV.lag)/max(1,(t0-1-k)) + neweywest(v2,NULL,kernel.type,prewhitening.kernel,VCOV.lag)/max(1,(T-t0+1-k)),
-                    varhac = VARHAC(v1,VHAC.max.lag)/max(1,(t0-1-k)) + VARHAC(v2,VHAC.max.lag)/max(1,(T-t0+1-k))
+                    iid = cov(v1)/(t0lag-1) + cov(v2)/(T-t0lag),
+                    var = VAR(v1,VCOV.lag)$LR/(t0lag-1) + VAR(v2,VCOV.lag)$LR/(T-t0lag),
+                    nw  = neweywest(v1,NULL,kernel.type,prewhitening.kernel,VCOV.lag)/(t0lag-1) + neweywest(v2,NULL,kernel.type,prewhitening.kernel,VCOV.lag)/(T-t0lag),
+                    varhac = VARHAC(v1,VHAC.max.lag)/(t0lag-1) + VARHAC(v2,VHAC.max.lag)/(T-t0lag)
   )
   
   
