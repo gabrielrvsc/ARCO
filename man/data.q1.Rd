@@ -9,6 +9,9 @@
 data(data.q1)
 }
 \description{
-This data contains 100 observations of 20 variables. Each variable is one ArCo unity. The intervention took place on the first unity at t0=51 by adding a constant equal to 3.
+This data contains 100 observations of 20 variables generated using the dgp from Carvalho, Masini and Medeiros (2016). Each variable is one ArCo unity. The intervention took place on the first unity at t0=51 by adding a constant equal to 0.628, which is one standard deviation of the treated unity variable before the intervention.
+}
+\references{
+Carvalho, C., Masini, R., Medeiros, M. (2016) "ArCo: An Artificial Counterfactual Approach For High-Dimensional Panel Time-Series Data.".
 }
 \keyword{datasets}
