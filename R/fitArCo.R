@@ -1,6 +1,7 @@
 #' Estimates the ArCo using the model selected by the user
 #' 
-#' Estimates the Artificial Counterfactual unsing any model supplied by the user, calculates the most relevant statistics and allows for the counterfactual confidence intervals to be estimated by block bootstrap.
+#' Estimates the Artificial Counterfactual unsing any model supplied by the user, calculates the most relevant statistics and allows for the counterfactual confidence intervals to be estimated by block bootstrap. \cr
+#' The model must be supplied by the user through the arguments fn and p.fn. The first determines which function will be used to estimate the model and the second determines the forecasting function. For more details see the examples and the description on the arguments.
 #' 
 #' @details This description may be useful to clarify the notation and understand how the arguments must be supplied to the functions.
 #' \itemize{
