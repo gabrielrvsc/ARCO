@@ -8,15 +8,15 @@ estimate_t0(data, fn, p.fn, start = 0.4, end = 0.9, treated.unity = 1,
   lag = 0, Xreg = NULL)
 }
 \arguments{
-\item{data}{A list of matrixes or dataframes of length q. Each matrix is T X n and it contains observations of a single variable for all units and all periods of time. Even in the case of a single variable (q=1), the matrix must be inside a list.}
+\item{data}{A list of matrixes or data frames of length q. Each matrix is T X n and it contains observations of a single variable for all units and all periods of time. Even in the case of a single variable (q=1), the matrix must be inside a list.}
 
 \item{fn}{The function used to estimate the first stage model. This function must receive only two arguments in the following order: X (independent variables), y (dependent variable). If the model requires additional arguments they must be supplied inside the function fn.}
 
-\item{p.fn}{The function used to estimate the predict using the first stage model. This function also must receive only two arguments in the following order: model (model estimated in the first stage), newdata (out of sample data to estimate the second stage). If the prediction requires additional arguments they must be supplied inside the function p.fn.}
+\item{p.fn}{The forecasting function used to estimate the counterfactual using the first stage model (normally a predict funtion). This function also must receive only two arguments in the following order: model (model estimated in the first stage), newdata (out of sample data to estimate the second stage). If the prediction requires additional arguments they must be supplied inside the function p.fn.}
 
-\item{start}{Initial value of L0 to be tested.}
+\item{start}{Initial value of \eqn{\lambda_0} to be tested.}
 
-\item{end}{Final value of L0 to be tested.}
+\item{end}{Final value of \eqn{\lambda_0} to be tested.}
 
 \item{treated.unity}{Single number indicating the unity where the intervention took place.}
 
@@ -36,9 +36,9 @@ Estimates the intervention time on a given treated unity based on any model supp
 \details{
 This description may be useful to clarify the notation and understand how the arguments must be supplied to the functions.
 \itemize{
-\item{units: }{Each unity is indexed by a number between 1,...,n. They are for exemple: countries, states, municipalities, firms, etc.}
-\item{Variables: }{For each unity and for every time period t=1,...,T we observe q_i >= 1 variables. They are for example: GDP, inflation, sales, etc.}
-\item{Intervention: }{The intervention took place only in the treated unity at time t0=L0*T, where L0 is in (0,1).}
+\item{units: }{Each unity is indexed by a number between \eqn{1,\dots,n}. They are for exemple: countries, states, municipalities, firms, etc.}
+\item{Variables: }{For each unity and for every time period \eqn{t=1,\dots,T} we observe \eqn{q_i \ge 1} variables. They are for example: GDP, inflation, sales, etc.}
+\item{Intervention: }{The intervention took place only in the treated unity at time \eqn{t_0=\lambda_0*T}, where \eqn{\lambda_0} is in (0,1).}
 }
 }
 \examples{
@@ -46,7 +46,7 @@ This description may be useful to clarify the notation and understand how the ar
 ## === Example for q=1 === ##
 #############################
 data(data.q1) 
-# = First unity was treated on t=51 by adding a constant equal 3
+# = First unity was treated on t=51 by adding a constant equal to one standard deviation.
 
 data=list(data.q1) # = Even if q=1 the data must be in a list
 
@@ -68,7 +68,7 @@ t0a=estimate_t0(data = data,fn = fn, p.fn = p.fn, treated.unity = 1 )
 ## === Example for q=2 === ##
 #############################
 
-# = First unity was treated on t=51 by adding constants 15 and -10 
+# = First unity was treated on t=51 by adding constants of standard deviation.
 # for the first and second variables
 data(data.q2) # data is already a list
 

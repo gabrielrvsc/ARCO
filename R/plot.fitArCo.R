@@ -1,22 +1,22 @@
 #' Plots realized values and the counterfactual estimated by the fitArCo function
 #' 
 #' @param x An ArCo object estimated using the fitArCo function.
-#' @param ylab n dimensional character vector, where n is the length of the plot argument.
-#' @param main n dimensional character vector, where n is the length of the plot argument.
-#' @param plot n dimensional numeric vector where each element represents an ArCo unity. If NULL, all unities will be plotted and ylab. If, for example, plot=c(1,2,5) only unities 1 2 and 5 will be plotted according to the order specified by the user on the fitArCo.
+#' @param ylab n dimensional character vector, where n is the length of the plot argument or n=q if plot=NULL.
+#' @param main n dimensional character vector, where n is the length of the plot argument or n=q if plot=NULL.
+#' @param plot n dimensional numeric vector where each element represents an ArCo unity. If NULL, all units will be plotted. If, for example, plot=c(1,2,5) only units 1 2 and 5 will be plotted according to the order specified by the user on the fitArCo.
 #' @param ncol Number of columns when multiple plots are displayed.    
-#' @param display.fitted If TRUE the fitted values of the estimation window are also plotted (default=FALSE). 
-#' @param y.min n dimensional numeric vector defining the lower bound for the y axis.
-#' @param y.max n dimensional numeric vector defining the upper bound for the y axis.
+#' @param display.fitted If TRUE the fitted values of the first step estimation are also plotted (default=FALSE). 
+#' @param y.min n dimensional numeric vector defining the lower bound for the y axis. n is the length of the plot argument or n=q if plot=NULL
+#' @param y.max n dimensional numeric vector defining the upper bound for the y axis. n is the length of the plot argument or n=q if plot=NULL
 #' @param ... Other graphical parameters to plot.  
-#' @param confidence.bands Set to TRUE to plot the counter factual confidence bands (default=FALSE). If the ArCo was estimated without bootstrap this argument will be forced to FALSE.
+#' @param confidence.bands TRUE to plot the counter factual confidence bands (default=FALSE). If the ArCo was estimated without bootstrap this argument will be forced to FALSE.
 #' @param alpha Significance level for the confidence bands. 
 #' @export
 #' @examples 
 #' ##############################################
 #' ## === Example based on the q=1 fitArCo === ##
 #' ##############################################
-#' data(data.q1) # = First unity was treated on t=51 by adding a constant equal 3
+#' data(data.q1) # = First unity was treated on t=51 by adding a constant equal to standard deviation
 #' data=list(data.q1) # = Even if q=1 the data must be in a list
 #' ## == Fitting the ArCo using linear regression == ##
 #' # = creating fn and p.fn function = #

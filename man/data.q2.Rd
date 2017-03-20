@@ -4,7 +4,7 @@
 \name{data.q2}
 \alias{data.q2}
 \title{A dataset used in the examples}
-\format{A list with 2 matrixes of 100 rows and 6 variables}
+\format{A list with 2 matrixes of 100 rows and 6 variables.}
 \usage{
 data(data.q2)
 }

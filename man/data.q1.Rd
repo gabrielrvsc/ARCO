@@ -4,7 +4,7 @@
 \name{data.q1}
 \alias{data.q1}
 \title{A generated dataset used in the examples}
-\format{A matrix with 100 rows and 20 variables}
+\format{A matrix with 100 rows and 20 variables.}
 \usage{
 data(data.q1)
 }

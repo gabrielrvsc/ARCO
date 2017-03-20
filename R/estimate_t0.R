@@ -4,14 +4,14 @@
 #' 
 #' @details This description may be useful to clarify the notation and understand how the arguments must be supplied to the functions.
 #' \itemize{
-#' \item{units: }{Each unity is indexed by a number between 1,...,n. They are for exemple: countries, states, municipalities, firms, etc.}
-#' \item{Variables: }{For each unity and for every time period t=1,...,T we observe q_i >= 1 variables. They are for example: GDP, inflation, sales, etc.}
-#' \item{Intervention: }{The intervention took place only in the treated unity at time t0=L0*T, where L0 is in (0,1).}
+#' \item{units: }{Each unity is indexed by a number between \eqn{1,\dots,n}. They are for exemple: countries, states, municipalities, firms, etc.}
+#' \item{Variables: }{For each unity and for every time period \eqn{t=1,\dots,T} we observe \eqn{q_i \ge 1} variables. They are for example: GDP, inflation, sales, etc.}
+#' \item{Intervention: }{The intervention took place only in the treated unity at time \eqn{t_0=\lambda_0*T}, where \eqn{\lambda_0} is in (0,1).}
 #' }
 #' 
 #' @inheritParams fitArCo
-#' @param start Initial value of L0 to be tested.
-#' @param end Final value of L0 to be tested.
+#' @param start Initial value of \eqn{\lambda_0} to be tested.
+#' @param end Final value of \eqn{\lambda_0} to be tested.
 #' @export
 #' @import Matrix glmnet
 #' @return A list with the following items:
@@ -23,7 +23,7 @@
 #' ## === Example for q=1 === ##
 #' #############################
 #' data(data.q1) 
-#' # = First unity was treated on t=51 by adding a constant equal 3
+#' # = First unity was treated on t=51 by adding a constant equal to one standard deviation.
 #' 
 #' data=list(data.q1) # = Even if q=1 the data must be in a list
 #' 
@@ -45,7 +45,7 @@
 #' ## === Example for q=2 === ##
 #' #############################
 #' 
-#' # = First unity was treated on t=51 by adding constants 15 and -10 
+#' # = First unity was treated on t=51 by adding constants of standard deviation.
 #' # for the first and second variables
 #' data(data.q2) # data is already a list
 #' 
