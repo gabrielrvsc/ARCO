@@ -9,7 +9,7 @@
 #' @param y.min n dimensional numeric vector defining the lower bound for the y axis. n is the length of the plot argument or n=q if plot=NULL
 #' @param y.max n dimensional numeric vector defining the upper bound for the y axis. n is the length of the plot argument or n=q if plot=NULL
 #' @param ... Other graphical parameters to plot.  
-#' @param confidence.bands TRUE to plot the counter factual confidence bands (default=FALSE). If the ArCo was estimated without bootstrap this argument will be forced to FALSE.
+#' @param confidence.bands TRUE to plot the counterfactual confidence bands (default=FALSE). If the ArCo was estimated without bootstrap this argument will be forced to FALSE.
 #' @param alpha Significance level for the confidence bands. 
 #' @export
 #' @examples 
@@ -110,7 +110,7 @@ plot.fitArCo=function(x,ylab=NULL,main=NULL,plot=NULL,ncol=1,display.fitted=FALS
       
       if(display.fitted==TRUE){
         graphics::lines(fitted[,i],col="red")
-        graphics::legend("topleft",legend = c("Observed","Fitted","Counter Fact."),col=c(1,2,4),
+        graphics::legend("topleft",legend = c("Observed","Fitted","Counterfactual"),col=c(1,2,4),
                lwd=c(1,1,1),lty=c(1,1,1),bty="n",xjust=1,seg.len = 1,y.intersp=0.5)
       }
     }
@@ -135,7 +135,7 @@ plot.fitArCo=function(x,ylab=NULL,main=NULL,plot=NULL,ncol=1,display.fitted=FALS
       
       if(display.fitted==TRUE){
         graphics::lines(fitted[,plot[i]],col="red")
-        graphics::legend("topleft",legend = c("Observed","Fitted","Counter Fact."),col=c(1,2,4),
+        graphics::legend("topleft",legend = c("Observed","Fitted","Counterfactual"),col=c(1,2,4),
                lwd=c(1,1,1),lty=c(1,1,1),bty="n",xjust=1,seg.len = 1,y.intersp=0.7)
       }
     }
