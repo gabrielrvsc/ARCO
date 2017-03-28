@@ -91,6 +91,9 @@ plot.fitArCo=function(x,ylab=NULL,main=NULL,plot=NULL,ncol=1,display.fitted=FALS
   
   
   if(is.null(plot)){
+    if(display.fitted==TRUE){
+      graphics::par(oma = c(4, 1, 1, 1))
+    }
     graphics::par(mfrow = c(ceiling(length(data)/ncol), ncol))
     for (i in 1:ncol(Y)) {
       graphics::plot(Y[, i], type = "l", ylab = ylab[i], xlab = "Time",main=main[i],ylim=c(y.min[i],y.max[i]),...)
@@ -110,11 +113,19 @@ plot.fitArCo=function(x,ylab=NULL,main=NULL,plot=NULL,ncol=1,display.fitted=FALS
       
       if(display.fitted==TRUE){
         graphics::lines(fitted[,i],col="red")
-        graphics::legend("topleft",legend = c("Observed","Fitted","Counterfactual"),col=c(1,2,4),
-               lwd=c(1,1,1),lty=c(1,1,1),bty="n",xjust=1,seg.len = 1,y.intersp=0.5)
       }
     }
+    
+    if(display.fitted==TRUE){
+      graphics::par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0), mar = c(0, 0, 0, 0), new = TRUE)
+      graphics::plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
+      graphics::legend("bottom",legend = c("Observed","Fitted","Counterfactual"),col=c(1,2,4),
+                       lwd=c(2,2,2),lty=c(1,1,1),bty="n",seg.len = 1,horiz = TRUE, inset = c(0,0),xpd=TRUE,cex=1.2)
+    }
   }else{
+    if(display.fitted==TRUE){
+      graphics::par(oma = c(4, 1, 1, 1))
+    }
     graphics::par(mfrow = c(ceiling(length(plot)/ncol), ncol))  
     for(i in 1:length(plot)){
       graphics::plot(Y[, plot[i]], type = "l", ylab = ylab[i], xlab = "Time",main=main[i],ylim=c(y.min[i],y.max[i]),...)
@@ -135,9 +146,13 @@ plot.fitArCo=function(x,ylab=NULL,main=NULL,plot=NULL,ncol=1,display.fitted=FALS
       
       if(display.fitted==TRUE){
         graphics::lines(fitted[,plot[i]],col="red")
-        graphics::legend("topleft",legend = c("Observed","Fitted","Counterfactual"),col=c(1,2,4),
-               lwd=c(1,1,1),lty=c(1,1,1),bty="n",xjust=1,seg.len = 1,y.intersp=0.7)
       }
+    }
+    if(display.fitted==TRUE){
+      graphics::par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0), mar = c(0, 0, 0, 0), new = TRUE)
+      graphics::plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
+      graphics::legend("bottom",legend = c("Observed","Fitted","Counterfactual"),col=c(1,2,4),
+                       lwd=c(2,2,2),lty=c(1,1,1),bty="n",seg.len = 1,cex=1.2,horiz = TRUE, inset = c(0,0),xpd=TRUE)
     }
   }
 
