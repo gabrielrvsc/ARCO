@@ -3,6 +3,7 @@
 S3method(plot,fitArCo)
 export(estimate_t0)
 export(fitArCo)
+export(panel_to_ArCo_list)
 import(Matrix)
 import(glmnet)
 importFrom(stats,cov)
