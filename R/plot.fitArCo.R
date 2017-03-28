@@ -30,10 +30,12 @@
 #' plot(ArCo)
 
 plot.fitArCo=function(x,ylab=NULL,main=NULL,plot=NULL,ncol=1,display.fitted=FALSE,y.min=NULL,y.max=NULL,confidence.bands=FALSE,alpha=0.05,...){
-
+  oldmar=graphics::par()$mar
+  oldmfrow=graphics::par()$mfrow
+  oldoma=graphics::par()$oma
   t0=x$t0
   data=x$data
-  fitted=x$fitted
+  fitted=x$fitted.values
   treated.unity=x$treated.unity
   cf=x$cf
   boot.cf=x$boot.cf
@@ -155,7 +157,8 @@ plot.fitArCo=function(x,ylab=NULL,main=NULL,plot=NULL,ncol=1,display.fitted=FALS
                        lwd=c(2,2,2),lty=c(1,1,1),bty="n",seg.len = 1,cex=1.2,horiz = TRUE, inset = c(0,0),xpd=TRUE)
     }
   }
-
+  graphics::par(mar=oldmar,mfrow=oldmfrow,oma=oldoma)
+  
 }
 
 

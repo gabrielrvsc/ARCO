@@ -25,7 +25,7 @@
 
 \item{y.max}{n dimensional numeric vector defining the upper bound for the y axis. n is the length of the plot argument or n=q if plot=NULL}
 
-\item{confidence.bands}{TRUE to plot the counter factual confidence bands (default=FALSE). If the ArCo was estimated without bootstrap this argument will be forced to FALSE.}
+\item{confidence.bands}{TRUE to plot the counterfactual confidence bands (default=FALSE). If the ArCo was estimated without bootstrap this argument will be forced to FALSE.}
 
 \item{alpha}{Significance level for the confidence bands.}
 

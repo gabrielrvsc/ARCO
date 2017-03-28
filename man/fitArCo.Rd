@@ -48,13 +48,14 @@ fitArCo(data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL,
 \value{
 An object with S3 class fitArCo.
 \item{cf}{estimated counterfactual}
-\item{fitted}{In sample fitted values for the pre-treatment period.}
+\item{fitted.values}{In sample fitted values for the pre-treatment period.}
 \item{model}{A list with q estimated models, one for each variable. Each element in the list is the output of the fn function.}
 \item{delta}{The delta statistics and its confidence interval.}
+\item{p.value}{ArCo p-value.}
 \item{data}{The data used.}
 \item{t0}{The intervention period used.}
 \item{treated.unity}{The treated unity used.}
-\item{boot.cf}{A list with the bootstrap result (boot.cf=TRUE) or logical FALSE (boot.cf=FALSE). In the first case, each element in the list refeers to one bootstrap replication of the counterfactual, i. e. the list length is R.}
+\item{boot.cf}{A list with the bootstrap result (boot.cf=TRUE) or logical FALSE (boot.cf=FALSE). In the first case, each element in the list refers to one bootstrap replication of the counterfactual, i. e. the list length is R.}
 \item{call}{The matched call.}
 }
 \description{
