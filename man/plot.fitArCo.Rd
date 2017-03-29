@@ -51,3 +51,6 @@ return(cbind(1,newdata) \%*\% b)}
 ArCo=fitArCo(data = data,fn = fn, p.fn = p.fn, treated.unity = 1 , t0 = 51)
 plot(ArCo)
 }
+\seealso{
+\code{\link{fitArCo}}
+}

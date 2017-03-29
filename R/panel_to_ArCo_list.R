@@ -2,7 +2,7 @@
 #' 
 #' Transforms a balanced panel into a list of matrices compatible with the firArCo function. The user must identify the columns with the time, the unit identifier and the variables.
 #' 
-#' @param panel Balanced panel on a data.frame with columns for units and time.
+#' @param panel Balanced panel in a data.frame with columns for units and time.
 #' @param time Name or index of the time column.
 #' @param unit Name or index of the unit column.
 #' @param variables Names or indexes of the columns containing the variables.
@@ -20,6 +20,7 @@
 #' data=panel_to_ArCo_list(panel,time="time",unit="unit",variables = c("v1","v2"))
 #' head(data$v1)
 #' 
+#' @seealso \code{\link{fitArCo}}
 
 panel_to_ArCo_list=function(panel,time,unit,variables){
   unit.nam=as.vector(unique(panel[,unit]))

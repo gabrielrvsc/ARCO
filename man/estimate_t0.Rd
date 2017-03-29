@@ -76,3 +76,6 @@ data(data.q2) # data is already a list
 
 t0b=estimate_t0(data = data.q2,fn = fn, p.fn = p.fn, treated.unity = 1, start=0.4)
 }
+\seealso{
+\code{\link{fitArCo}}
+}

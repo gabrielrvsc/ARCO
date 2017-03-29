@@ -67,7 +67,7 @@
 #' ## === Example for q=2 === ##
 #' #############################
 #' 
-#' # = First unity was treated on t=51 by adding constants of standard deviation
+#' # = First unity was treated on t=51 by adding constants of one standard deviation
 #' # for the first and second variables
 #' 
 #' data(data.q2) # data is already a list
@@ -85,7 +85,7 @@
 #' @references Carvalho, C., Masini, R., Medeiros, M. (2016) "ArCo: An Artificial Counterfactual Approach For High-Dimensional Panel Time-Series Data.".
 #' 
 #' Andrews, D. W., & Monahan, J. C. (1992). An improved heteroskedasticity and autocorrelation consistent covariance matrix estimator. Econometrica: Journal of the Econometric Society, 953-966.
-
+#' @seealso \code{\link{plot}}, \code{\link{estimate_t0}}, \code{\link{panel_to_ArCo_list}}
 
 fitArCo=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL, alpha = 0.05, boot.cf = FALSE, R = 100, l = 3,VCOV.type=c("iid","var","nw","varhac"),VCOV.lag=1,bandwidth.kernel=NULL,kernel.type=c("QuadraticSpectral","Truncated","Bartlett","Parzen","TukeyHanning"),VHAC.max.lag=5,prewhitening.kernel=FALSE) 
 {

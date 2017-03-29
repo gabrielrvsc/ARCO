@@ -45,14 +45,14 @@
 #' ## === Example for q=2 === ##
 #' #############################
 #' 
-#' # = First unity was treated on t=51 by adding constants of standard deviation.
+#' # = First unity was treated on t=51 by adding constants of one standard deviation.
 #' # for the first and second variables
 #' data(data.q2) # data is already a list
 #' 
 #' ## == Detecting lambda0 using the package glmnet via LASSO and crossvalidation == ##
 #' 
 #' t0b=estimate_t0(data = data.q2,fn = fn, p.fn = p.fn, treated.unity = 1, start=0.4)
-
+#' @seealso \code{\link{fitArCo}}
 
 
 estimate_t0=function (data, fn, p.fn, start = 0.4, end = 0.9, treated.unity = 1, 

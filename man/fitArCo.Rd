@@ -116,4 +116,7 @@ Carvalho, C., Masini, R., Medeiros, M. (2016) "ArCo: An Artificial Counterfactua
 
 Andrews, D. W., & Monahan, J. C. (1992). An improved heteroskedasticity and autocorrelation consistent covariance matrix estimator. Econometrica: Journal of the Econometric Society, 953-966.
 }
+\seealso{
+\code{\link{plot}}, \code{\link{estimate_t0}}, \code{\link{panel_to_ArCo_list}}
+}
 \keyword{ArCo}

@@ -7,7 +7,7 @@
 panel_to_ArCo_list(panel, time, unit, variables)
 }
 \arguments{
-\item{panel}{Balanced panel on a data.frame with columns for units and time.}
+\item{panel}{Balanced panel in a data.frame with columns for units and time.}
 
 \item{time}{Name or index of the time column.}
 
@@ -31,4 +31,7 @@ head(panel)
 data=panel_to_ArCo_list(panel,time="time",unit="unit",variables = c("v1","v2"))
 head(data$v1)
 
+}
+\seealso{
+\code{\link{fitArCo}}
 }
