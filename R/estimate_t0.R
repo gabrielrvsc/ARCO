@@ -23,7 +23,8 @@
 #' ## === Example for q=1 === ##
 #' #############################
 #' data(data.q1) 
-#' # = First unity was treated on t=51 by adding a constant equal to one standard deviation.
+#' # = First unity was treated on t=51 by adding
+#' # a constant equal to one standard deviation.
 #' 
 #' data=list(data.q1) # = Even if q=1 the data must be in a list
 #' 

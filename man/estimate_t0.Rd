@@ -46,7 +46,8 @@ This description may be useful to clarify the notation and understand how the ar
 ## === Example for q=1 === ##
 #############################
 data(data.q1) 
-# = First unity was treated on t=51 by adding a constant equal to one standard deviation.
+# = First unity was treated on t=51 by adding
+# a constant equal to one standard deviation.
 
 data=list(data.q1) # = Even if q=1 the data must be in a list
 
@@ -68,7 +69,7 @@ t0a=estimate_t0(data = data,fn = fn, p.fn = p.fn, treated.unity = 1 )
 ## === Example for q=2 === ##
 #############################
 
-# = First unity was treated on t=51 by adding constants of standard deviation.
+# = First unity was treated on t=51 by adding constants of one standard deviation.
 # for the first and second variables
 data(data.q2) # data is already a list
 

@@ -16,7 +16,9 @@
 #' ##############################################
 #' ## === Example based on the q=1 fitArCo === ##
 #' ##############################################
-#' data(data.q1) # = First unity was treated on t=51 by adding a constant equal to one standard deviation
+#'# = First unity was treated on t=51 by adding
+#'# a constant equal to one standard deviation
+#' data(data.q1)
 #' data=list(data.q1) # = Even if q=1 the data must be in a list
 #' ## == Fitting the ArCo using linear regression == ##
 #' # = creating fn and p.fn function = #
