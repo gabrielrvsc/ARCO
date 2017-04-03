@@ -32,7 +32,7 @@
 \item{...}{Other graphical parameters to plot.}
 }
 \description{
-Plots realized values and the counterfactual estimated by the fitArCo function
+Plots realized values and the counterfactual estimated by the fitArCo function. The plotted variables will be on the same level as supplied to the fitArCo function.
 }
 \examples{
 ##############################################
