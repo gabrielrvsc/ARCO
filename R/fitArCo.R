@@ -203,10 +203,22 @@ fitArCo=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL, alpha
   
   
   
-  w = sqrt(diag(sigmahat))
+  #pvalue
   W = T * t(delta) %*% solve(sigmahat) %*% delta
   p.value = 1 - stats::pchisq(W, length(delta))
   
+  if(length(delta)>1){
+    p.ind=rep(NA,length(delta))
+    aux=diag(sigmahat)
+    for(i in 1:length(delta)){
+      Wi = T * t(delta)[i] %*% solve(aux[i]) %*% delta[i]
+      p.ind[i]=1 - stats::pchisq(Wi, 1)
+    }
+    p.value=c(p.value,p.ind)
+    names(p.value)=c("Joint",names(data))
+  }
+  #confidence
+  w = sqrt(diag(sigmahat))
   uI = delta + (w * qnorm(1 - alpha/2))/sqrt(T)
   lI = delta - (w * qnorm(1 - alpha/2))/sqrt(T)
   delta.stat = cbind(LB = lI, delta = delta, UB = uI)
