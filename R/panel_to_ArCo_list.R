@@ -1,6 +1,6 @@
-#' Transforms a balanced panel into a list of matrices compatible with the firArCo function 
+#' Transforms a balanced panel into a list of matrices compatible with the fitArCo function 
 #' 
-#' Transforms a balanced panel into a list of matrices compatible with the firArCo function. The user must identify the columns with the time, the unit identifier and the variables.
+#' Transforms a balanced panel into a list of matrices compatible with the fitArCo function. The user must identify the columns with the time, the unit identifier and the variables.
 #' 
 #' @param panel Balanced panel in a data.frame with columns for units and time.
 #' @param time Name or index of the time column.

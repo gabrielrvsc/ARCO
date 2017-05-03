@@ -11,7 +11,7 @@
 #' }
 #' 
 #' @param data A list of matrixes or data frames of length q. Each matrix is T X n and it contains observations of a single variable for all units and all periods of time. Even in the case of a single variable (q=1), the matrix must be inside a list.
-#' @param fn The function used to estimate the first stage model. This function must receive only two arguments in the following order: X (independent variables), y (dependent variable). If the model requires additional arguments they must be supplied inside the function fn.
+#' @param fn The function used to estimate the first stage model. This function must receive only two arguments in the following order: X (independent variables), y (dependent variable). If the model requires additional arguments they must be supplied inside the function fn. If not supplied the default is the lm function.
 #' @param p.fn The forecasting function used to estimate the counterfactual using the first stage model (normally a predict funtion). This function also must receive only two arguments in the following order: model (model estimated in the first stage), newdata (out of sample data to estimate the second stage). If the prediction requires additional arguments they must be supplied inside the function p.fn.
 #' @param treated.unity Single number indicating the unity where the intervention took place.
 #' @param t0 Single number indicating the intervention period.
@@ -27,6 +27,8 @@
 #' @param kernel.type Kernel to be used for VCOV.type="nw".
 #' @param VHAC.max.lag Maximum lag of the VAR in case VCOV.type="varhac".  
 #' @param prewhitening.kernel If TRUE and VCOV.type="nw", the covariance matrix is calculated with prewhitening (default=FALSE).
+#' @param ... Additional arguments used in the function fn.
+#' 
 #' @return An object with S3 class fitArCo.
 #' \item{cf}{estimated counterfactual}
 #' \item{fitted.values}{In sample fitted values for the pre-treatment period.}
@@ -88,8 +90,19 @@
 #' Andrews, D. W., & Monahan, J. C. (1992). An improved heteroskedasticity and autocorrelation consistent covariance matrix estimator. Econometrica: Journal of the Econometric Society, 953-966.
 #' @seealso \code{\link{plot}}, \code{\link{estimate_t0}}, \code{\link{panel_to_ArCo_list}}
 
-fitArCo=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL, alpha = 0.05, boot.cf = FALSE, R = 100, l = 3,VCOV.type=c("iid","var","nw","varhac"),VCOV.lag=1,bandwidth.kernel=NULL,kernel.type=c("QuadraticSpectral","Truncated","Bartlett","Parzen","TukeyHanning"),VHAC.max.lag=5,prewhitening.kernel=FALSE) 
+fitArCo=function (data, fn=NULL, p.fn=NULL, treated.unity, t0, lag = 0, Xreg = NULL, alpha = 0.05, boot.cf = FALSE, R = 100, l = 3,VCOV.type=c("iid","var","nw","varhac"),VCOV.lag=1,bandwidth.kernel=NULL,kernel.type=c("QuadraticSpectral","Truncated","Bartlett","Parzen","TukeyHanning"),VHAC.max.lag=5,prewhitening.kernel=FALSE,...) 
 {
+  
+  if(is.null(fn)){
+    fn=function(x,y){stats::lm(y~x)}
+  }
+  if(is.null(p.fn)){
+    p.fn=function(model,newdata){
+      b=stats::coef(model)
+      return(cbind(1,newdata) %*% b)
+    }
+  }
+  
   VCOV.type=match.arg(VCOV.type)
   kernel.type=match.arg(kernel.type)
   if (boot.cf == TRUE) {
@@ -153,7 +166,7 @@ fitArCo=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL, alpha
   save.fitted = matrix(NA, nrow(Y), length(data))
   model.list = list()
   for (i in 1:length(data)) {
-    model = fn(x.fit, y.fit[, i])
+    model = fn(x.fit, y.fit[, i],...)
     model.list[[i]] = model
     contra.fact = p.fn(model, x.pred)
     save.cf[, i] = contra.fact
@@ -171,7 +184,7 @@ fitArCo=function (data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL, alpha
       }
       save.cf.boot = matrix(NA, nrow(x.pred), q)
       for (i in 1:q) {
-        model.boot = fn(x.fit, y.fit[, i])
+        model.boot = fn(x.fit, y.fit[, i],...)
         contra.fact.boot = p.fn(model.boot, x.pred)
         save.cf.boot[, i] = contra.fact.boot
       }

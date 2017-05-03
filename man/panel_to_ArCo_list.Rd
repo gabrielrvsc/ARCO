@@ -2,7 +2,7 @@
 % Please edit documentation in R/panel_to_ArCo_list.R
 \name{panel_to_ArCo_list}
 \alias{panel_to_ArCo_list}
-\title{Transforms a balanced panel into a list of matrices compatible with the firArCo function}
+\title{Transforms a balanced panel into a list of matrices compatible with the fitArCo function}
 \usage{
 panel_to_ArCo_list(panel, time, unit, variables)
 }
@@ -16,7 +16,7 @@ panel_to_ArCo_list(panel, time, unit, variables)
 \item{variables}{Names or indexes of the columns containing the variables.}
 }
 \description{
-Transforms a balanced panel into a list of matrices compatible with the firArCo function. The user must identify the columns with the time, the unit identifier and the variables.
+Transforms a balanced panel into a list of matrices compatible with the fitArCo function. The user must identify the columns with the time, the unit identifier and the variables.
 }
 \examples{
 # = Generate a small panel as example = #

@@ -4,16 +4,17 @@
 \alias{fitArCo}
 \title{Estimates the ArCo using the model selected by the user}
 \usage{
-fitArCo(data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL,
-  alpha = 0.05, boot.cf = FALSE, R = 100, l = 3, VCOV.type = c("iid",
-  "var", "nw", "varhac"), VCOV.lag = 1, bandwidth.kernel = NULL,
-  kernel.type = c("QuadraticSpectral", "Truncated", "Bartlett", "Parzen",
-  "TukeyHanning"), VHAC.max.lag = 5, prewhitening.kernel = FALSE)
+fitArCo(data, fn = NULL, p.fn = NULL, treated.unity, t0, lag = 0,
+  Xreg = NULL, alpha = 0.05, boot.cf = FALSE, R = 100, l = 3,
+  VCOV.type = c("iid", "var", "nw", "varhac"), VCOV.lag = 1,
+  bandwidth.kernel = NULL, kernel.type = c("QuadraticSpectral", "Truncated",
+  "Bartlett", "Parzen", "TukeyHanning"), VHAC.max.lag = 5,
+  prewhitening.kernel = FALSE, ...)
 }
 \arguments{
 \item{data}{A list of matrixes or data frames of length q. Each matrix is T X n and it contains observations of a single variable for all units and all periods of time. Even in the case of a single variable (q=1), the matrix must be inside a list.}
 
-\item{fn}{The function used to estimate the first stage model. This function must receive only two arguments in the following order: X (independent variables), y (dependent variable). If the model requires additional arguments they must be supplied inside the function fn.}
+\item{fn}{The function used to estimate the first stage model. This function must receive only two arguments in the following order: X (independent variables), y (dependent variable). If the model requires additional arguments they must be supplied inside the function fn. If not supplied the default is the lm function.}
 
 \item{p.fn}{The forecasting function used to estimate the counterfactual using the first stage model (normally a predict funtion). This function also must receive only two arguments in the following order: model (model estimated in the first stage), newdata (out of sample data to estimate the second stage). If the prediction requires additional arguments they must be supplied inside the function p.fn.}
 
@@ -44,6 +45,8 @@ fitArCo(data, fn, p.fn, treated.unity, t0, lag = 0, Xreg = NULL,
 \item{VHAC.max.lag}{Maximum lag of the VAR in case VCOV.type="varhac".}
 
 \item{prewhitening.kernel}{If TRUE and VCOV.type="nw", the covariance matrix is calculated with prewhitening (default=FALSE).}
+
+\item{...}{Additional arguments used in the function fn.}
 }
 \value{
 An object with S3 class fitArCo.
