@@ -147,7 +147,7 @@ fitArCo=function (data, fn=NULL, p.fn=NULL, treated.unity, t0, lag = 0, Xreg = N
   if (lag != 0) {
     aux1 = sort(rep(0:lag, ncol(X)))
     aux = paste(rep(colnames(X), lag + 1), "lag", aux1, sep = ".")
-    X = embed(X, lag + 1)
+    X = embed(as.matrix(X), lag + 1)
     colnames(X) = aux
     Y = tail(Y, nrow(X))
   }
