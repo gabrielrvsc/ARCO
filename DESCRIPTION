@@ -1,6 +1,6 @@
 Package: ArCo
 Title: Artificial Counterfactual Package
-Version: 0.1-2
+Version: 0.2
 Date: 2017-03-20
 Authors@R: c(person("Yuri R.", "Fonseca", email="yuriresendefonseca@outlook.com", role = c("aut")),person("Ricardo", "Masini", email="ricardo.masini@fgv.br", role = c("aut")),person("Marcelo C.", "Medeiros", email="mcm@econ.puc-rio.br", role = c("aut")),person("Gabriel F. R.", "Vasconcelos", email="gabrielrvsc@yahoo.com.br", role = c("aut", "cre")))
 Maintainer: Gabriel F. R. Vasconcelos <gabrielrvsc@yahoo.com.br>
