@@ -50,15 +50,25 @@
 #' # for the first and second variables
 #' data(data.q2) # data is already a list
 #' 
-#' ## == Detecting lambda0 using the package glmnet via LASSO and crossvalidation == ##
 #' 
 #' t0b=estimate_t0(data = data.q2,fn = fn, p.fn = p.fn, treated.unit = 1, start=0.4)
 #' @seealso \code{\link{fitArCo}}
 
 
-estimate_t0=function (data, fn, p.fn, start = 0.4, end = 0.9, treated.unit = 1, 
-          lag = 0, Xreg = NULL) 
+estimate_t0=function (data, fn=NULL, p.fn=NULL, start = 0.4, end = 0.9, treated.unit = 1, 
+          lag = 0, Xreg = NULL , ...) 
 {
+  
+  if(is.null(fn)){
+    fn=function(x,y){stats::lm(y~x)}
+  }
+  if(is.null(p.fn)){
+    p.fn=function(model,newdata){
+      b=stats::coef(model)
+      return(cbind(1,newdata) %*% b)
+    }
+  }
+  
   for (i in 1:length(data)) {
     if (is.null(colnames(data[[i]]))) {
       colnames(data[[i]]) = paste("V", i, "-U", 1:ncol(data[[i]]), 
@@ -79,7 +89,7 @@ estimate_t0=function (data, fn, p.fn, start = 0.4, end = 0.9, treated.unit = 1,
   save.delta = matrix(0, T, length(data))
   for (i in starting.point:ending.point) {
     m = fitArCo(data = data, fn = fn, p.fn = p.fn, treated.unit = treated.unit, 
-                lag = lag, t0 = i, Xreg = Xreg)
+                lag = lag, t0 = i, Xreg = Xreg, ...)
     delta = m$delta[,2]
     save.delta[i, ] = delta
   }

@@ -4,8 +4,8 @@
 \alias{estimate_t0}
 \title{Estimates the intervention time on a given treated unit}
 \usage{
-estimate_t0(data, fn, p.fn, start = 0.4, end = 0.9, treated.unit = 1,
-  lag = 0, Xreg = NULL)
+estimate_t0(data, fn = NULL, p.fn = NULL, start = 0.4, end = 0.9,
+  treated.unit = 1, lag = 0, Xreg = NULL, ...)
 }
 \arguments{
 \item{data}{A list of matrixes or data frames of length q. Each matrix is T X n and it contains observations of a single variable for all units and all periods of time. Even in the case of a single variable (q=1), the matrix must be inside a list.}
@@ -23,6 +23,8 @@ estimate_t0(data, fn, p.fn, start = 0.4, end = 0.9, treated.unit = 1,
 \item{lag}{Number of lags in the first stage model. Default is 0, i.e. only contemporaneous variables are used.}
 
 \item{Xreg}{Exogenous controls.}
+
+\item{...}{Additional arguments used in the function fn.}
 }
 \value{
 A list with the following items:
@@ -73,7 +75,6 @@ t0a=estimate_t0(data = data,fn = fn, p.fn = p.fn, treated.unit = 1 )
 # for the first and second variables
 data(data.q2) # data is already a list
 
-## == Detecting lambda0 using the package glmnet via LASSO and crossvalidation == ##
 
 t0b=estimate_t0(data = data.q2,fn = fn, p.fn = p.fn, treated.unit = 1, start=0.4)
 }
