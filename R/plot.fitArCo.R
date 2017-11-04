@@ -5,7 +5,7 @@
 #' @param x An ArCo object estimated using the fitArCo function.
 #' @param ylab n dimensional character vector, where n is the length of the plot argument or n=q if plot=NULL.
 #' @param main n dimensional character vector, where n is the length of the plot argument or n=q if plot=NULL.
-#' @param plot n dimensional numeric vector where each element represents an ArCo unity. If NULL, all units will be plotted. If, for example, plot=c(1,2,5) only units 1 2 and 5 will be plotted according to the order specified by the user on the fitArCo.
+#' @param plot n dimensional numeric vector where each element represents an ArCo unit. If NULL, all units will be plotted. If, for example, plot=c(1,2,5) only units 1 2 and 5 will be plotted according to the order specified by the user on the fitArCo.
 #' @param ncol Number of columns when multiple plots are displayed.    
 #' @param display.fitted If TRUE the fitted values of the first step estimation are also plotted (default=FALSE). 
 #' @param y.min n dimensional numeric vector defining the lower bound for the y axis. n is the length of the plot argument or n=q if plot=NULL
@@ -18,7 +18,7 @@
 #' ##############################################
 #' ## === Example based on the q=1 fitArCo === ##
 #' ##############################################
-#'# = First unity was treated on t=51 by adding
+#'# = First unit was treated on t=51 by adding
 #'# a constant equal to one standard deviation
 #' data(data.q1)
 #' data=list(data.q1) # = Even if q=1 the data must be in a list
@@ -30,7 +30,7 @@
 #' p.fn=function(model,newdata){
 #' b=coef(model)
 #' return(cbind(1,newdata) %*% b)}
-#' ArCo=fitArCo(data = data,fn = fn, p.fn = p.fn, treated.unity = 1 , t0 = 51)
+#' ArCo=fitArCo(data = data,fn = fn, p.fn = p.fn, treated.unit = 1 , t0 = 51)
 #' plot(ArCo)
 #' @seealso \code{\link{fitArCo}}
 
@@ -41,7 +41,7 @@ plot.fitArCo=function(x,ylab=NULL,main=NULL,plot=NULL,ncol=1,display.fitted=FALS
   t0=x$t0
   data=x$data
   fitted=x$fitted.values
-  treated.unity=x$treated.unity
+  treated.unit=x$treated.unit
   cf=x$cf
   boot.cf=x$boot.cf
   
@@ -61,9 +61,9 @@ plot.fitArCo=function(x,ylab=NULL,main=NULL,plot=NULL,ncol=1,display.fitted=FALS
   }
   
   if (length(data) == 1) {
-    Y = matrix(data[[1]][, treated.unity], ncol = 1)
+    Y = matrix(data[[1]][, treated.unit], ncol = 1)
   }else {
-    Y = Reduce("cbind", lapply(data, function(x) x[, treated.unity]))
+    Y = Reduce("cbind", lapply(data, function(x) x[, treated.unit]))
   }
   
   aux=nrow(Y)-nrow(fitted)-nrow(cf)

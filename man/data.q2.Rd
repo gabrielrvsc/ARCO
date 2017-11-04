@@ -9,7 +9,7 @@
 data(data.q2)
 }
 \description{
-This data is a list with two matrixes, each have 100 observations and 6 variables. It was generatedthe using the dgp from Carvalho, Masini and Medeiros (2016). In the ArCo context, each matrix is a variable and each variable in the matrixes is an unity. The intervention took place on the first unity at t0=51 by adding constants of 0.840 and 0.511 (one standar deviation before the intervention) on variables (matrixes) 1 and 2.
+This data is a list with two matrixes, each have 100 observations and 6 variables. It was generatedthe using the dgp from Carvalho, Masini and Medeiros (2016). In the ArCo context, each matrix is a variable and each variable in the matrixes is an unit. The intervention took place on the first unit at t0=51 by adding constants of 0.840 and 0.511 (one standar deviation before the intervention) on variables (matrixes) 1 and 2.
 }
 \references{
 Carvalho, C., Masini, R., Medeiros, M. (2016) "ArCo: An Artificial Counterfactual Approach For High-Dimensional Panel Time-Series Data.".

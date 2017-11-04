@@ -15,7 +15,7 @@
 
 \item{main}{n dimensional character vector, where n is the length of the plot argument or n=q if plot=NULL.}
 
-\item{plot}{n dimensional numeric vector where each element represents an ArCo unity. If NULL, all units will be plotted. If, for example, plot=c(1,2,5) only units 1 2 and 5 will be plotted according to the order specified by the user on the fitArCo.}
+\item{plot}{n dimensional numeric vector where each element represents an ArCo unit. If NULL, all units will be plotted. If, for example, plot=c(1,2,5) only units 1 2 and 5 will be plotted according to the order specified by the user on the fitArCo.}
 
 \item{ncol}{Number of columns when multiple plots are displayed.}
 
@@ -38,7 +38,7 @@ Plots realized values and the counterfactual estimated by the fitArCo function. 
 ##############################################
 ## === Example based on the q=1 fitArCo === ##
 ##############################################
-# = First unity was treated on t=51 by adding
+# = First unit was treated on t=51 by adding
 # a constant equal to one standard deviation
 data(data.q1)
 data=list(data.q1) # = Even if q=1 the data must be in a list
@@ -50,7 +50,7 @@ return(lm(y~X))
 p.fn=function(model,newdata){
 b=coef(model)
 return(cbind(1,newdata) \%*\% b)}
-ArCo=fitArCo(data = data,fn = fn, p.fn = p.fn, treated.unity = 1 , t0 = 51)
+ArCo=fitArCo(data = data,fn = fn, p.fn = p.fn, treated.unit = 1 , t0 = 51)
 plot(ArCo)
 }
 \seealso{

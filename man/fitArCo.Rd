@@ -4,7 +4,7 @@
 \alias{fitArCo}
 \title{Estimates the ArCo using the model selected by the user}
 \usage{
-fitArCo(data, fn = NULL, p.fn = NULL, treated.unity, t0, lag = 0,
+fitArCo(data, fn = NULL, p.fn = NULL, treated.unit, t0, lag = 0,
   Xreg = NULL, alpha = 0.05, boot.cf = FALSE, R = 100, l = 3,
   VCOV.type = c("iid", "var", "nw", "varhac"), VCOV.lag = 1,
   bandwidth.kernel = NULL, kernel.type = c("QuadraticSpectral", "Truncated",
@@ -18,7 +18,7 @@ fitArCo(data, fn = NULL, p.fn = NULL, treated.unity, t0, lag = 0,
 
 \item{p.fn}{The forecasting function used to estimate the counterfactual using the first stage model (normally a predict funtion). This function also must receive only two arguments in the following order: model (model estimated in the first stage), newdata (out of sample data to estimate the second stage). If the prediction requires additional arguments they must be supplied inside the function p.fn.}
 
-\item{treated.unity}{Single number indicating the unity where the intervention took place.}
+\item{treated.unit}{Single number indicating the unit where the intervention took place.}
 
 \item{t0}{Single number indicating the intervention period.}
 
@@ -57,7 +57,9 @@ An object with S3 class fitArCo.
 \item{p.value}{ArCo p-value.}
 \item{data}{The data used.}
 \item{t0}{The intervention period used.}
-\item{treated.unity}{The treated unity used.}
+\item{treated.unit}{The treated unit used.}
+\item{omega}{Residual standard deviation.}
+\item{residuals}{model residuals.}
 \item{boot.cf}{A list with the bootstrap result (boot.cf=TRUE) or logical FALSE (boot.cf=FALSE). In the first case, each element in the list refers to one bootstrap replication of the counterfactual, i. e. the list length is R.}
 \item{call}{The matched call.}
 }
@@ -68,9 +70,9 @@ The model must be supplied by the user through the arguments fn and p.fn. The fi
 \details{
 This description may be useful to clarify the notation and understand how the arguments must be supplied to the functions.
 \itemize{
-\item{units: }{Each unity is indexed by a number between \eqn{1,\dots,n}. They are for exemple: countries, states, municipalities, firms, etc.}
-\item{Variables: }{For each unity and for every time period \eqn{t=1,\dots,T} we observe \eqn{q_i \ge 1} variables. They are for example: GDP, inflation, sales, etc.}
-\item{Intervention: }{The intervention took place only in the treated unity at time \eqn{t_0=\lambda_0*T}, where \eqn{\lambda_0} is in (0,1).}
+\item{units: }{Each unit is indexed by a number between \eqn{1,\dots,n}. They are for exemple: countries, states, municipalities, firms, etc.}
+\item{Variables: }{For each unit and for every time period \eqn{t=1,\dots,T} we observe \eqn{q_i \ge 1} variables. They are for example: GDP, inflation, sales, etc.}
+\item{Intervention: }{The intervention took place only in the treated unit at time \eqn{t_0=\lambda_0*T}, where \eqn{\lambda_0} is in (0,1).}
 }
 }
 \examples{
@@ -78,7 +80,7 @@ This description may be useful to clarify the notation and understand how the ar
 ## === Example for q=1 === ##
 #############################
 data(data.q1)
-# = First unity was treated on t=51 by adding 
+# = First unit was treated on t=51 by adding 
 # a constant equal to one standard deviation
 
 data=list(data.q1) # = Even if q=1 the data must be in a list
@@ -93,13 +95,13 @@ b=coef(model)
 return(cbind(1,newdata) \%*\% b)
 }
 
-ArCo=fitArCo(data = data,fn = fn, p.fn = p.fn, treated.unity = 1 , t0 = 51)
+ArCo=fitArCo(data = data,fn = fn, p.fn = p.fn, treated.unit = 1 , t0 = 51)
 
 #############################
 ## === Example for q=2 === ##
 #############################
 
-# = First unity was treated on t=51 by adding constants of one standard deviation
+# = First unit was treated on t=51 by adding constants of one standard deviation
 # for the first and second variables
 
 data(data.q2) # data is already a list
@@ -111,7 +113,7 @@ data(data.q2) # data is already a list
 ## == Bartlett kernel weights for two lags == ##
 require(glmnet)
 set.seed(123)
-ArCo2=fitArCo(data = data.q2,fn = cv.glmnet, p.fn = predict,treated.unity = 1 , t0 = 51, 
+ArCo2=fitArCo(data = data.q2,fn = cv.glmnet, p.fn = predict,treated.unit = 1 , t0 = 51, 
              VCOV.type = "nw",kernel.type = "QuadraticSpectral",VCOV.lag = 2)
 
 }
