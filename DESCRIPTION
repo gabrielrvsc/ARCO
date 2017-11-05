@@ -13,6 +13,4 @@ RoxygenNote: 6.0.1
 Imports: 
     Matrix,
     glmnet,
-    boot,
-    broom
-Suggests: tidyverse, dplyr, tibble, reshape2, ggplot2
+    boot
